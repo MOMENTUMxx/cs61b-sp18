@@ -1,11 +1,9 @@
-import javax.naming.InterruptedNamingException;
-
 public class LinkedListDeque<T> {
 
     private class TNode {
-        public T item;
-        public TNode next;
-        public TNode prev;
+        private T item;
+        private TNode next;
+        private TNode prev;
 
         public TNode(TNode p, T i, TNode n) {
             prev = p;
@@ -73,6 +71,7 @@ public class LinkedListDeque<T> {
         }
         return tmp.item;
     }
+
 /*
     public T getRecursive(int index) {
         if (index == 0)
@@ -85,10 +84,12 @@ public class LinkedListDeque<T> {
 
     /**recursion with a help method*/
     private T getRecursive(int index, TNode tmp) {
-        if (index == 0)
+        if (index == 0) {
             return tmp.item;
-        else
-            return getRecursive(index-1, tmp.next);
+        }
+        else {
+            return getRecursive(index - 1, tmp.next);
+        }
     }
 
     public T getRecursive(int index) {

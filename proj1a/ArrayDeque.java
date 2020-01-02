@@ -7,7 +7,7 @@ public class ArrayDeque<T> {
 
     public ArrayDeque() {
         size = 0;
-        items = (T[])new Object[8];
+        items = (T[]) new Object[8];
         nextFirst = 4;
         nextLast = 5;
     }
@@ -16,16 +16,18 @@ public class ArrayDeque<T> {
         size++;
         items[nextFirst] = item;
         nextFirst--;
-        if (nextFirst < 0)
+        if (nextFirst < 0) {
             nextFirst = items.length;
+        }
     }
 
     public void addLast(T item) {
         size++;
         items[nextLast] = item;
         nextLast++;
-        if (nextLast > items.length)
+        if (nextLast > items.length) {
             nextLast = 0;
+        }
     }
 
     public boolean isEmpty() {
@@ -37,8 +39,9 @@ public class ArrayDeque<T> {
     }
 
     public void printDeque() {
-        for (T item : items)
+        for (T item : items) {
             System.out.println(item);
+        }
     }
 
     public T removeFirst() {
