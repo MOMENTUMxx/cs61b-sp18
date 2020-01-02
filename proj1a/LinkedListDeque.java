@@ -73,7 +73,7 @@ public class LinkedListDeque<T> {
     /** iteration*/
     public T get(int index) {
         TNode tmp = sentinal.next;
-        for (int i = 0;i < index;i++) {
+        for (int i = 0; i < index; i++) {
             tmp = tmp.next;
         }
         return tmp.item;
