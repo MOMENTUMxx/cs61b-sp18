@@ -1,3 +1,8 @@
+/**
+ * LinkedListDeque
+ * implemented in circular way
+ * @author LujieWang
+ */
 public class LinkedListDeque<T> {
 
     private class TNode {
