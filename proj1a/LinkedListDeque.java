@@ -14,8 +14,8 @@ public class LinkedListDeque<T> {
         }
     }
 
-    public int size;
-    public TNode sentinal;
+    private int size;
+    private TNode sentinal;
 
     public LinkedListDeque() {
         size = 0;
@@ -84,7 +84,7 @@ public class LinkedListDeque<T> {
     }*/
 
     /**recursion with a help method*/
-    public T getRecursive(int index, TNode tmp) {
+    private T getRecursive(int index, TNode tmp) {
         if (index == 0)
             return tmp.item;
         else
