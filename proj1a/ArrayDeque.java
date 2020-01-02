@@ -50,6 +50,26 @@ public class ArrayDeque<T> {
         return (index -1 + items.length) % items.length;
     }
 
+    private void resize(int capacity) {
+        T[] newDeque = (T[])new Object[capacity];
+        int oldIndex = plusOne(nextFirst);
+        for (int newIndex = 0; newIndex < size; newIndex++) {
+            newDeque[newIndex] = items[oldIndex];
+            oldIndex = plusOne(oldIndex);
+        }
+        items = newDeque;
+        nextFirst = capacity - 1;
+        nextLast = size;
+    }
+
+    private void upSize() {
+        resize(size * 2);
+    }
+
+    private void downSize() {
+        resize(items.length / 2);
+    }
+
     public void addFirst(T item) {
         if (isFull()) {
             upSize();
@@ -74,26 +94,6 @@ public class ArrayDeque<T> {
 
     public int size() {
         return size;
-    }
-
-    private void resize(int capacity) {
-        T[] newDeque = (T[])new Object[capacity];
-        int oldIndex = plusOne(nextFirst);
-        for (int newIndex = 0; newIndex < size; newIndex++) {
-            newDeque[newIndex] = items[oldIndex];
-            oldIndex = plusOne(oldIndex);
-        }
-        items = newDeque;
-        nextFirst = capacity - 1;
-        nextLast = size;
-    }
-
-    private void upSize() {
-        resize(size * 2);
-    }
-
-    private void downSize() {
-        resize(items.length / 2);
     }
 
     public void printDeque() {
@@ -130,7 +130,7 @@ public class ArrayDeque<T> {
             return null;
         }
         int start = plusOne(nextFirst);
-        return items[(start + index) / items.length];
+        return items[(start + index) % items.length];
     }
 }
 
