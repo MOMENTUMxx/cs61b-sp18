@@ -47,11 +47,11 @@ public class ArrayDeque<T> {
      * Minus one circularly
      */
     private int minusOne(int index) {
-        return (index -1 + items.length) % items.length;
+        return (index - 1 + items.length) % items.length;
     }
 
     private void resize(int capacity) {
-        T[] newDeque = (T[])new Object[capacity];
+        T[] newDeque = (T[]) new Object[capacity];
         int oldIndex = plusOne(nextFirst);
         for (int newIndex = 0; newIndex < size; newIndex++) {
             newDeque[newIndex] = items[oldIndex];
@@ -107,6 +107,9 @@ public class ArrayDeque<T> {
         if (isSparse()) {
             downSize();
         }
+        if (size == 0) {
+            return null;
+        }
         size--;
         nextFirst = plusOne(nextFirst);
         T toRemove = items[nextFirst];
@@ -117,6 +120,9 @@ public class ArrayDeque<T> {
     public T removeLast() {
         if (isSparse()) {
             downSize();
+        }
+        if (size == 0) {
+            return null;
         }
         size--;
         nextLast = minusOne(nextLast);
