@@ -105,14 +105,17 @@ public class IntList {
         return new IntList(A.first, catenate(A.rest, B));
     }
 
-    public static IntList reverse(IntList l) {
-        IntList tmp = l;
-        IntList reverse = null;
-        while (tmp != null) {
-            reverse = new IntList(tmp.first, reverse);
-            tmp = tmp.rest;
+    public static IntList reverse(IntList A) {
+        if (A == null) {
+            return A;
         }
-        return reverse;
+        IntList reversed, restOfList;
+        for (reversed = null; A != null; A = restOfList) {
+            restOfList = A.rest;
+            A.rest = reversed;
+            reversed = A;
+        }
+        return reversed;
     }
 
 
