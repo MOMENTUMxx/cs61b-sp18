@@ -107,12 +107,12 @@ public class IntList {
 
     public static IntList reverse(IntList l) {
         IntList tmp = l;
-        l = null;
+        IntList reverse = null;
         while (tmp != null) {
-            l = new IntList(tmp.first, l);
+            reverse = new IntList(tmp.first, reverse);
             tmp = tmp.rest;
         }
-        return l;
+        return reverse;
     }
 
 
