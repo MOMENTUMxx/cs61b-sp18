@@ -19,12 +19,13 @@ public class TestPalindrome {
     @Test
     public void testIsPalindrome() {
         assertFalse("Not a palindrome.", palindrome.isPalindrome("cat"));
-        assertTrue( palindrome.isPalindrome("noon"));
-        assertTrue( palindrome.isPalindrome(""));
-        assertTrue( palindrome.isPalindrome("3"));
+        assertTrue(palindrome.isPalindrome("noon"));
+        assertTrue(palindrome.isPalindrome(""));
+        assertTrue(palindrome.isPalindrome("3"));
+        assertTrue(palindrome.isPalindrome("cs61b16sc"));
 
         CharacterComparator offByOne = new OffByOne();
         assertFalse("Not a palindrome.", palindrome.isPalindrome("cat", offByOne));
-        assertTrue( palindrome.isPalindrome("flake", offByOne));
+        assertTrue(palindrome.isPalindrome("flake", offByOne));
     }
 }
