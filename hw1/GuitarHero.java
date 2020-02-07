@@ -29,7 +29,7 @@ public class GuitarHero {
                 for (int i = 0; i < concert.length; i++) {
                     string[i].tic();
                 }
-            } catch (Exception e) {
+            } catch (ArrayIndexOutOfBoundsException e) {
                 System.out.println("This key is not related");
             }
         }
