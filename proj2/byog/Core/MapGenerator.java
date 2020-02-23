@@ -10,14 +10,14 @@ public class MapGenerator {
     private static final int WIDTH = 60;
     private static final int HEIGHT = 30;
 
-    public static long SEED = Game.SUBSEED;
-    private static final Random RANDOM = new Random(SEED);
+    public static long SEED;
+    private static Random RANDOM;
 
 //    private static TERenderer ter = new TERenderer();
-    public static TETile[][] world = new TETile[WIDTH][HEIGHT];
+    public static TETile[][] world;
 
-    private static Component[] collection = new Component[100];
-    private static int size = 0;
+    private static Component[] collection;
+    private static int size;
 
     /**
      * Rendering the whole window with NOTHING
@@ -25,6 +25,12 @@ public class MapGenerator {
     public static void prepare() {
         // initialize the tile rendering engine with a window of size WIDTH x HEIGHT
 //        ter.initialize(WIDTH, HEIGHT);
+
+        SEED = Game.SUBSEED;
+        RANDOM = new Random(SEED);
+        world = new TETile[WIDTH][HEIGHT];
+        collection = new Component[1000];
+        size = 0;
 
         // initialize tiles
         for (int x = 0; x < WIDTH; x += 1) {
