@@ -59,8 +59,8 @@ public class MapGenerator {
 //        int yStart = RandomUtils.uniform(RANDOM, 10, 15);
         int xStart = 0;
         int yStart = 0;
-        int length = RandomUtils.uniform(RANDOM, 4, 8);
-        int width = RandomUtils.uniform(RANDOM, 4, 8);
+        int length = RandomUtils.uniform(RANDOM, 4, 9);
+        int width = RandomUtils.uniform(RANDOM, 4, 9);
         Component cc = new Component(xStart, yStart, length, width);
         collection[size] = cc;
         size++;
