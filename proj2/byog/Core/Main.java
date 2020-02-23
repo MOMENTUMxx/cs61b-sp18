@@ -1,7 +1,6 @@
 package byog.Core;
 
 import byog.TileEngine.TETile;
-import edu.princeton.cs.introcs.StdDraw;
 
 
 /** This is the main entry point for the program. This class simply parses
