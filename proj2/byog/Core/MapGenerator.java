@@ -1,6 +1,6 @@
 package byog.Core;
 
-import byog.TileEngine.TERenderer;
+//import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
 
@@ -13,7 +13,7 @@ public class MapGenerator {
     public static long SEED = Game.SUBSEED;
     private static final Random RANDOM = new Random(SEED);
 
-    private static TERenderer ter = new TERenderer();
+//    private static TERenderer ter = new TERenderer();
     public static TETile[][] world = new TETile[WIDTH][HEIGHT];
 
     private static Component[] collection = new Component[100];
@@ -24,7 +24,7 @@ public class MapGenerator {
      */
     public static void prepare() {
         // initialize the tile rendering engine with a window of size WIDTH x HEIGHT
-        ter.initialize(WIDTH, HEIGHT);
+//        ter.initialize(WIDTH, HEIGHT);
 
         // initialize tiles
         for (int x = 0; x < WIDTH; x += 1) {
@@ -649,6 +649,6 @@ public class MapGenerator {
         generateWorld1(c);
 //        world[c.xStart][c.yStart] = Tileset.LOCKED_DOOR;
 
-        ter.renderFrame(world);
+//        ter.renderFrame(world);
     }
 }
