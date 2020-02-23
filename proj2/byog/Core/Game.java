@@ -31,8 +31,8 @@ public class Game {
         // TODO: Fill out this method to run the game using the input passed in,
         // and return a 2D tile representation of the world that would have been
         // drawn if the same inputs had been given to playWithKeyboard().
-
-        TETile[][] finalWorldFrame = null;
-        return finalWorldFrame;
+        MapGenerator.SEED = Long.parseLong(input);
+        MapGenerator.run();
+        return MapGenerator.world;
     }
 }

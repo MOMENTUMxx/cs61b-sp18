@@ -1,15 +1,14 @@
 package byog.lab5;
-import org.junit.Test;
-import static org.junit.Assert.*;
 
-import byog.TileEngine.TERenderer;
-import byog.TileEngine.TETile;
-import byog.TileEngine.Tileset;
-
-import java.util.Random;
+import static byog.lab5.SingleHexagon.*;
 
 /**
  * Draws a world consisting of hexagonal regions.
  */
 public class HexWorld {
+    public static void main(String[] args) {
+        prepare();
+        tesselation(6);
+        ter.renderFrame(world);
+    }
 }
