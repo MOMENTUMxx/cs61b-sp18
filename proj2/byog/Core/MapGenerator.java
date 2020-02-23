@@ -55,12 +55,10 @@ public class MapGenerator {
     }
 
     public static Component createRoom() {
-//        int xStart = RandomUtils.uniform(RANDOM, 25, 30);
-//        int yStart = RandomUtils.uniform(RANDOM, 10, 15);
-        int xStart = 0;
-        int yStart = 0;
-        int length = RandomUtils.uniform(RANDOM, 4, 7);
-        int width = RandomUtils.uniform(RANDOM, 4, 7);
+        int xStart = RandomUtils.uniform(RANDOM, 25, 30);
+        int yStart = RandomUtils.uniform(RANDOM, 10, 15);
+        int length = RandomUtils.uniform(RANDOM, 4, 9);
+        int width = RandomUtils.uniform(RANDOM, 4, 9);
         Component cc = new Component(xStart, yStart, length, width);
         collection[size] = cc;
         size++;
@@ -82,7 +80,7 @@ public class MapGenerator {
     public static Component rHallwayNearRoom(Component c) {
         int xStart = c.xStart + c.length - 1;
         int yStart = c.yStart + 1;
-        int length = RandomUtils.uniform(RANDOM, 4, WIDTH / 10);
+        int length = RandomUtils.uniform(RANDOM, 4, WIDTH / 8);
         int width = 3;
         Component cc = new Component(xStart, yStart, length, width);
         collection[size] = cc;
@@ -103,7 +101,7 @@ public class MapGenerator {
     }
 
     public static Component lHallwayNearRoom(Component c) {
-        int length = RandomUtils.uniform(RANDOM, 4, WIDTH / 10);
+        int length = RandomUtils.uniform(RANDOM, 4, WIDTH / 8);
         int width = 3;
         int xStart = c.xStart - length;
         int yStart = c.yStart + 1;
@@ -129,7 +127,7 @@ public class MapGenerator {
         int xStart = c.xStart + 1;
         int yStart = c.yStart + c.width - 1;
         int length = 3;
-        int width = RandomUtils.uniform(RANDOM, 4, HEIGHT / 5);
+        int width = RandomUtils.uniform(RANDOM, 4, HEIGHT / 4);
         Component cc = new Component(xStart, yStart, length, width);
         collection[size] = cc;
         size++;
@@ -150,7 +148,7 @@ public class MapGenerator {
 
     public static Component dHallwayNearRoom(Component c) {
         int length = 3;
-        int width = RandomUtils.uniform(RANDOM, 4, HEIGHT / 5);
+        int width = RandomUtils.uniform(RANDOM, 4, HEIGHT / 4);
         int xStart = c.xStart + 1;
         int yStart = c.yStart - width;
         Component cc = new Component(xStart, yStart, length, width);
@@ -175,7 +173,7 @@ public class MapGenerator {
         int xStart = c.xStart + c.length - 1;
         int yStart = c.yStart;
         int length = 3;
-        int width = RandomUtils.uniform(RANDOM, 4, HEIGHT / 5);
+        int width = RandomUtils.uniform(RANDOM, 4, HEIGHT / 4);
         Component cc = new Component(xStart, yStart, length, width);
         collection[size] = cc;
         size++;
@@ -197,7 +195,7 @@ public class MapGenerator {
 
     public static Component dHallwayNearRHallway(Component c) {
         int length = 3;
-        int width = RandomUtils.uniform(RANDOM, 4, HEIGHT / 5);
+        int width = RandomUtils.uniform(RANDOM, 4, HEIGHT / 4);
         int xStart = c.xStart + c.length - 1;
         int yStart = c.yStart - width + 3;
         Component cc = new Component(xStart, yStart, length, width);
@@ -223,7 +221,7 @@ public class MapGenerator {
         int xStart = c.xStart - 2;
         int yStart = c.yStart;
         int length = 3;
-        int width = RandomUtils.uniform(RANDOM, 4, HEIGHT / 5);
+        int width = RandomUtils.uniform(RANDOM, 4, HEIGHT / 4);
         Component cc = new Component(xStart, yStart, length, width);
         collection[size] = cc;
         size++;
@@ -245,7 +243,7 @@ public class MapGenerator {
 
     public static Component dHallwayNearLHallway(Component c) {
         int length = 3;
-        int width = RandomUtils.uniform(RANDOM, 4, HEIGHT / 5);
+        int width = RandomUtils.uniform(RANDOM, 4, HEIGHT / 4);
         int xStart = c.xStart - 2;
         int yStart = c.yStart - width + 3;
         Component cc = new Component(xStart, yStart, length, width);
@@ -268,7 +266,7 @@ public class MapGenerator {
     }
 
     public static Component lHallwayNearUHallway(Component c) {
-        int length = RandomUtils.uniform(RANDOM, 4, HEIGHT / 5);
+        int length = RandomUtils.uniform(RANDOM, 4, HEIGHT / 4);
         int width = 3;
         int xStart = c.xStart - length + 3;
         int yStart = c.yStart + c.width - 1;
@@ -294,7 +292,7 @@ public class MapGenerator {
     public static Component rHallwayNearUHallway(Component c) {
         int xStart = c.xStart;
         int yStart = c.yStart + c.width - 1;
-        int length = RandomUtils.uniform(RANDOM, 4, HEIGHT / 5);
+        int length = RandomUtils.uniform(RANDOM, 4, HEIGHT / 4);
         int width = 3;
         Component cc = new Component(xStart, yStart, length, width);
         collection[size] = cc;
@@ -316,7 +314,7 @@ public class MapGenerator {
     }
 
     public static Component lHallwayNearDHallway(Component c) {
-        int length = RandomUtils.uniform(RANDOM, 4, HEIGHT / 5);
+        int length = RandomUtils.uniform(RANDOM, 4, HEIGHT / 4);
         int width = 3;
         int xStart = c.xStart - length + 3;
         int yStart = c.yStart - 2;
@@ -342,7 +340,7 @@ public class MapGenerator {
     public static Component rHallwayNearDHallway(Component c) {
         int xStart = c.xStart;
         int yStart = c.yStart - 1;
-        int length = RandomUtils.uniform(RANDOM, 4, HEIGHT / 5);
+        int length = RandomUtils.uniform(RANDOM, 4, HEIGHT / 4);
         int width = 3;
         Component cc = new Component(xStart, yStart, length, width);
         collection[size] = cc;
