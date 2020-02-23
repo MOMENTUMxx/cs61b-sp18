@@ -8,6 +8,7 @@ public class Game {
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
+    public static long SUBSEED;
 
     /**
      * Method used for playing a fresh game. The game should start from the main menu.
@@ -31,7 +32,13 @@ public class Game {
         // TODO: Fill out this method to run the game using the input passed in,
         // and return a 2D tile representation of the world that would have been
         // drawn if the same inputs had been given to playWithKeyboard().
-        MapGenerator.SEED = Long.parseLong(input);
+        char in[] = input.toCharArray();
+        StringBuffer str = new StringBuffer();
+        for (int i = 1; i < in.length - 1; i++) {
+            str.append(in[i]);
+        }
+        String s = str.toString();
+        SUBSEED = Long.parseLong(s);
         MapGenerator.run();
         return MapGenerator.world;
     }
