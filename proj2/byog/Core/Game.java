@@ -8,7 +8,7 @@ public class Game {
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
-    public static long SUBSEED;
+//    public static long SUBSEED;
 
     /**
      * Method used for playing a fresh game. The game should start from the main menu.
@@ -38,7 +38,7 @@ public class Game {
             str.append(in[i]);
         }
         String s = str.toString();
-        SUBSEED = Long.parseLong(s);
+//        SUBSEED = Long.parseLong(s);
         MapGenerator.run();
         return MapGenerator.world;
     }

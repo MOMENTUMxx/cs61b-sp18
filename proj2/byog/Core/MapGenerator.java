@@ -10,7 +10,7 @@ public class MapGenerator {
     private static final int WIDTH = 60;
     private static final int HEIGHT = 30;
 
-    public static long SEED = Game.SUBSEED;
+    public static long SEED;
     private static final Random RANDOM = new Random(SEED);
 
     private static TERenderer ter = new TERenderer();
