@@ -10,7 +10,6 @@ public class MapGenerator {
     private static final int WIDTH = 60;
     private static final int HEIGHT = 30;
 
-    private static long SEED;
     private static Random RANDOM;
 
 //    private static TERenderer ter = new TERenderer();
@@ -26,8 +25,8 @@ public class MapGenerator {
         // initialize the tile rendering engine with a window of size WIDTH x HEIGHT
 //        ter.initialize(WIDTH, HEIGHT);
 
-        SEED = Game.SUBSEED;
-        RANDOM = new Random(SEED);
+        long seed = Game.SUBSEED;
+        RANDOM = new Random(seed);
         world = new TETile[WIDTH][HEIGHT];
         collection = new Component[1000];
         size = 0;
@@ -570,7 +569,7 @@ public class MapGenerator {
                         generateWorld(rRoom);
                     }
                     break;
-                default: return;
+                default:
             }
         }
     }
@@ -654,7 +653,7 @@ public class MapGenerator {
                         generateWorld(rRoom);
                     }
                     break;
-                default: return;
+                default:
             }
         }
     }
