@@ -13,7 +13,7 @@ public class MapGenerator {
     private static Random RANDOM;
 
 //    private static TERenderer ter = new TERenderer();
-    protected static TETile[][] world;
+    static TETile[][] world;
 
     private static Component[] collection;
     private static int size;
