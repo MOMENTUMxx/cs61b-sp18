@@ -10,11 +10,11 @@ public class MapGenerator {
     private static final int WIDTH = 60;
     private static final int HEIGHT = 30;
 
-    public static long SEED;
+    private static long SEED;
     private static Random RANDOM;
 
 //    private static TERenderer ter = new TERenderer();
-    public static TETile[][] world;
+    protected static TETile[][] world;
 
     private static Component[] collection;
     private static int size;
@@ -498,34 +498,38 @@ public class MapGenerator {
             int num1 = RANDOM.nextInt(3);
             switch (num1) {
                 case 0: Component rRoom = rRoomNearHallway(rHallway);
-                        if (notOutOfBounds(rRoom) && notIntersect(rRoom)) {
-                            drawRNeighborRoom(rHallway, rRoom);
+                    if (notOutOfBounds(rRoom) && notIntersect(rRoom)) {
+                        drawRNeighborRoom(rHallway, rRoom);
+                    } else {
+                        return;
+                    }
+                    generateWorld(rRoom);
+                    break;
+                case 1: Component uHallway1 = uHallwayNearRHallway(rHallway);
+                    if (notOutOfBounds(uHallway1) && notIntersect(uHallway1)) {
+                        drawUHallwayNearRHallway(uHallway1);
+                        Component uRoom = uRoomNearHallway(uHallway1);
+                        if (notOutOfBounds(uRoom) && notIntersect(uRoom)) {
+                            drawUNeighborRoom(uHallway1, uRoom);
                         } else {
                             return;
                         }
-                        generateWorld(rRoom);
-                case 1: Component uHallway1 = uHallwayNearRHallway(rHallway);
-                        if (notOutOfBounds(uHallway1) && notIntersect(uHallway1)) {
-                            drawUHallwayNearRHallway(uHallway1);
-                            Component uRoom = uRoomNearHallway(uHallway1);
-                            if (notOutOfBounds(uRoom) && notIntersect(uRoom)) {
-                                drawUNeighborRoom(uHallway1, uRoom);
-                            } else {
-                                return;
-                            }
-                            generateWorld(uRoom);
-                        }
+                        generateWorld(uRoom);
+                    }
+                    break;
                 case 2: Component dHallway1 = dHallwayNearRHallway(rHallway);
-                        if (notOutOfBounds(dHallway1) && notIntersect(dHallway1)) {
-                            drawDHallwayNearRHallway(dHallway1);
-                            Component dRoom = dRoomNearHallway(dHallway1);
-                            if (notOutOfBounds(dRoom) && notIntersect(dRoom)) {
-                                drawDNeighborRoom(dHallway1, dRoom);
-                            } else {
-                                return;
-                            }
-                            generateWorld(dRoom);
+                    if (notOutOfBounds(dHallway1) && notIntersect(dHallway1)) {
+                        drawDHallwayNearRHallway(dHallway1);
+                        Component dRoom = dRoomNearHallway(dHallway1);
+                        if (notOutOfBounds(dRoom) && notIntersect(dRoom)) {
+                            drawDNeighborRoom(dHallway1, dRoom);
+                        } else {
+                            return;
                         }
+                        generateWorld(dRoom);
+                    }
+                    break;
+                default: return;
             }
         }
 
@@ -535,34 +539,38 @@ public class MapGenerator {
             int num2 = RANDOM.nextInt(3);
             switch (num2) {
                 case 0: Component uRoom = uRoomNearHallway(uHallway);
-                        if (notOutOfBounds(uRoom) && notIntersect(uRoom)) {
-                            drawUNeighborRoom(uHallway, uRoom);
+                    if (notOutOfBounds(uRoom) && notIntersect(uRoom)) {
+                        drawUNeighborRoom(uHallway, uRoom);
+                    } else {
+                        return;
+                    }
+                    generateWorld(uRoom);
+                    break;
+                case 1: Component lHallway1 = lHallwayNearUHallway(uHallway);
+                    if (notOutOfBounds(lHallway1) && notIntersect(lHallway1)) {
+                        drawLHallwayNearUHallway(lHallway1);
+                        Component lRoom = lRoomNearHallway(lHallway1);
+                        if (notOutOfBounds(lRoom) && notIntersect(lRoom)) {
+                            drawLNeighborRoom(lHallway1, lRoom);
                         } else {
                             return;
                         }
-                        generateWorld(uRoom);
-                case 1: Component lHallway1 = lHallwayNearUHallway(uHallway);
-                        if (notOutOfBounds(lHallway1) && notIntersect(lHallway1)) {
-                            drawLHallwayNearUHallway(lHallway1);
-                            Component lRoom = lRoomNearHallway(lHallway1);
-                            if (notOutOfBounds(lRoom) && notIntersect(lRoom)) {
-                                drawLNeighborRoom(lHallway1, lRoom);
-                            } else {
-                                return;
-                            }
-                            generateWorld(lRoom);
-                        }
+                        generateWorld(lRoom);
+                    }
+                    break;
                 case 2: Component rHallway1 = rHallwayNearUHallway(uHallway);
-                        if (notOutOfBounds(rHallway1) && notIntersect(rHallway1)) {
-                            drawRHallwayNearUHallway(rHallway1);
-                            Component rRoom = rRoomNearHallway(rHallway1);
-                            if (notOutOfBounds(rRoom) && notIntersect(rRoom)) {
-                                drawRNeighborRoom(rHallway1, rRoom);
-                            } else {
-                                return;
-                            }
-                            generateWorld(rRoom);
+                    if (notOutOfBounds(rHallway1) && notIntersect(rHallway1)) {
+                        drawRHallwayNearUHallway(rHallway1);
+                        Component rRoom = rRoomNearHallway(rHallway1);
+                        if (notOutOfBounds(rRoom) && notIntersect(rRoom)) {
+                            drawRNeighborRoom(rHallway1, rRoom);
+                        } else {
+                            return;
                         }
+                        generateWorld(rRoom);
+                    }
+                    break;
+                default: return;
             }
         }
     }
@@ -574,34 +582,38 @@ public class MapGenerator {
             int num3 = RANDOM.nextInt(3);
             switch (num3) {
                 case 0: Component lRoom = lRoomNearHallway(lHallway);
-                        if (notOutOfBounds(lRoom) && notIntersect(lRoom)) {
-                            drawLNeighborRoom(lHallway, lRoom);
+                    if (notOutOfBounds(lRoom) && notIntersect(lRoom)) {
+                        drawLNeighborRoom(lHallway, lRoom);
+                    } else {
+                        return;
+                    }
+                    generateWorld(lRoom);
+                    break;
+                case 1: Component uHallway1 = uHallwayNearLHallway(lHallway);
+                    if (notOutOfBounds(uHallway1) && notIntersect(uHallway1)) {
+                        drawUHallwayNearLHallway(uHallway1);
+                        Component uRoom = uRoomNearHallway(uHallway1);
+                        if (notOutOfBounds(uRoom) && notIntersect(uRoom)) {
+                            drawUNeighborRoom(uHallway1, uRoom);
                         } else {
                             return;
                         }
-                        generateWorld(lRoom);
-                case 1: Component uHallway1 = uHallwayNearLHallway(lHallway);
-                        if (notOutOfBounds(uHallway1) && notIntersect(uHallway1)) {
-                            drawUHallwayNearLHallway(uHallway1);
-                            Component uRoom = uRoomNearHallway(uHallway1);
-                            if (notOutOfBounds(uRoom) && notIntersect(uRoom)) {
-                                drawUNeighborRoom(uHallway1, uRoom);
-                            } else {
-                                return;
-                            }
-                            generateWorld(uRoom);
-                        }
+                        generateWorld(uRoom);
+                    }
+                    break;
                 case 2: Component dHallway1 = dHallwayNearLHallway(lHallway);
-                        if (notOutOfBounds(dHallway1) && notIntersect(dHallway1)) {
-                            drawDHallwayNearLHallway(dHallway1);
-                            Component dRoom = dRoomNearHallway(dHallway1);
-                            if (notOutOfBounds(dRoom) && notIntersect(dRoom)) {
-                                drawDNeighborRoom(dHallway1, dRoom);
-                            } else {
-                                return;
-                            }
-                            generateWorld(dRoom);
+                    if (notOutOfBounds(dHallway1) && notIntersect(dHallway1)) {
+                        drawDHallwayNearLHallway(dHallway1);
+                        Component dRoom = dRoomNearHallway(dHallway1);
+                        if (notOutOfBounds(dRoom) && notIntersect(dRoom)) {
+                            drawDNeighborRoom(dHallway1, dRoom);
+                        } else {
+                            return;
                         }
+                        generateWorld(dRoom);
+                    }
+                    break;
+                default: return;
             }
         }
 
@@ -611,34 +623,38 @@ public class MapGenerator {
             int num4 = RANDOM.nextInt(3);
             switch (num4) {
                 case 0: Component dRoom = dRoomNearHallway(dHallway);
-                        if (notOutOfBounds(dRoom) && notIntersect(dRoom)) {
-                            drawDNeighborRoom(dHallway, dRoom);
+                    if (notOutOfBounds(dRoom) && notIntersect(dRoom)) {
+                        drawDNeighborRoom(dHallway, dRoom);
+                    } else {
+                        return;
+                    }
+                    generateWorld(dRoom);
+                    break;
+                case 1: Component lHallway1 = lHallwayNearDHallway(dHallway);
+                    if (notOutOfBounds(lHallway1) && notIntersect(lHallway1)) {
+                        drawLHallwayNearDHallway(lHallway1);
+                        Component lRoom = lRoomNearHallway(lHallway1);
+                        if (notOutOfBounds(lRoom) && notIntersect(lRoom)) {
+                            drawLNeighborRoom(lHallway1, lRoom);
                         } else {
                             return;
                         }
-                        generateWorld(dRoom);
-                case 1: Component lHallway1 = lHallwayNearDHallway(dHallway);
-                        if (notOutOfBounds(lHallway1) && notIntersect(lHallway1)) {
-                            drawLHallwayNearDHallway(lHallway1);
-                            Component lRoom = lRoomNearHallway(lHallway1);
-                            if (notOutOfBounds(lRoom) && notIntersect(lRoom)) {
-                                drawLNeighborRoom(lHallway1, lRoom);
-                            } else {
-                                return;
-                            }
-                            generateWorld(lRoom);
-                        }
+                        generateWorld(lRoom);
+                    }
+                    break;
                 case 2: Component rHallway1 = rHallwayNearDHallway(dHallway);
-                        if (notOutOfBounds(rHallway1) && notIntersect(rHallway1)) {
-                            drawRHallwayNearDHallway(rHallway1);
-                            Component rRoom = rRoomNearHallway(rHallway1);
-                            if (notOutOfBounds(rRoom) && notIntersect(rRoom)) {
-                                drawRNeighborRoom(rHallway1, rRoom);
-                            } else {
-                                return;
-                            }
-                            generateWorld(rRoom);
+                    if (notOutOfBounds(rHallway1) && notIntersect(rHallway1)) {
+                        drawRHallwayNearDHallway(rHallway1);
+                        Component rRoom = rRoomNearHallway(rHallway1);
+                        if (notOutOfBounds(rRoom) && notIntersect(rRoom)) {
+                            drawRNeighborRoom(rHallway1, rRoom);
+                        } else {
+                            return;
                         }
+                        generateWorld(rRoom);
+                    }
+                    break;
+                default: return;
             }
         }
     }
