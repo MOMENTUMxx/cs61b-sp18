@@ -1,20 +1,54 @@
 package byog.Core;
 
-import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
+import edu.princeton.cs.introcs.StdDraw;
+
+import java.io.File;
+import java.util.regex.*;
 
 
 public class Game {
-    TERenderer ter = new TERenderer();
-    /* Feel free to change the width and height. */
-    public static final int WIDTH = 80;
-    public static final int HEIGHT = 30;
     static long SUBSEED;
 
     /**
      * Method used for playing a fresh game. The game should start from the main menu.
      */
     public void playWithKeyboard() {
+       try {
+           MapGenerator.drawFrame();
+           while (true) {
+               if (!StdDraw.hasNextKeyTyped()) {
+                   continue;
+               }
+               char temp = StdDraw.nextKeyTyped();
+               switch (temp) {
+                   case 'n': MapGenerator.drawText("Please enter a seed and press 'S' to start", 35);
+                        StringBuilder input = new StringBuilder();
+                        while (temp != 's') {
+                           if (!StdDraw.hasNextKeyTyped()) {
+                               continue;
+                           }
+                           temp = StdDraw.nextKeyTyped();
+                           input.append(temp);
+                        }
+                        String s = input.substring(0, input.length() - 1);
+                        SUBSEED = Long.parseLong(s);
+                        MapGenerator.run();
+                        break;
+                   case 'q': System.exit(0);
+                        break;
+                   case 'l': File f = new File("./game.ser");
+                       if ((!f.exists())) {
+                       MapGenerator.drawRedText("No previous game has been saved.", 30);
+                       return;
+                   }
+                        StdDraw.enableDoubleBuffering();
+                        MapGenerator.run(MapGenerator.loadWorld());
+               }
+           }
+       } catch (NumberFormatException e) {
+           MapGenerator.drawRedText("Sorry, you didn't enter the proper number", 30);
+       }
     }
 
     /**
@@ -33,14 +67,40 @@ public class Game {
         // Fill out this method to run the game using the input passed in,
         // and return a 2D tile representation of the world that would have been
         // drawn if the same inputs had been given to playWithKeyboard().
-        char[] in = input.toCharArray();
-        StringBuffer str = new StringBuffer();
+        /*char[] in = input.toCharArray();
+        StringBuilder str = new StringBuilder();
         for (int i = 1; i < in.length - 1; i++) {
             str.append(in[i]);
         }
         String s = str.toString();
         SUBSEED = Long.parseLong(s);
         MapGenerator.run();
-        return MapGenerator.world;
+        return MapGenerator.world;*/
+        String pattern1 = "(n)(\\d+)(s)([a-z]+)(:q)?";
+        Pattern r1 = Pattern.compile(pattern1);
+        Matcher m1 = r1.matcher(input);
+        if (m1.find()) {
+            SUBSEED = Long.parseLong(m1.group(2));
+            MapGenerator.runWithInputString(m1.group(4).toCharArray());
+            if (m1.group(5) != null) {
+                MapGenerator.saveWorld(new Info(SUBSEED, MapGenerator.x, MapGenerator.y));
+            }
+            return MapGenerator.world;
+        }
+
+        String pattern2 = "(l)([a-z]*)(:q)?";
+        Pattern r2 = Pattern.compile(pattern2);
+        Matcher m2 = r2.matcher(input);
+        if (m2.find()) {
+            if (m2.group(2) != null) {
+                SUBSEED = MapGenerator.loadWorld().saveLastSeed;
+                MapGenerator.runWithInputString(m2.group(2).toCharArray(), MapGenerator.loadWorld());
+            }
+            if (m2.group(3) != null) {
+                MapGenerator.saveWorld(new Info(MapGenerator.loadWorld().saveLastSeed, MapGenerator.lastXX, MapGenerator.lastYY));
+            }
+            return MapGenerator.world;
+        }
+        return null;
     }
 }
