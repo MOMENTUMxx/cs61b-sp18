@@ -1254,7 +1254,6 @@ public class MapGenerator {
 
     public static void runWithInputString(char[] chars, Info info) {
         prepareWithInputString(info.saveLastSeed);
-
         Component c = createRoom(random2);
         drawARec(c);
         generateWorld(c, random2);
