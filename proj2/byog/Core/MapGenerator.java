@@ -179,6 +179,20 @@ public class MapGenerator {
         }
     }
 
+    public static void prepareWithInputString(long ss) {
+        RANDOM2 = new Random(ss);
+        world = new TETile[WIDTH][HEIGHT];
+        collection = new Component[1000];
+        size = 0;
+
+        // initialize tiles
+        for (int x = 0; x < WIDTH; x += 1) {
+            for (int y = 0; y < HEIGHT; y += 1) {
+                world[x][y] = Tileset.NOTHING;
+            }
+        }
+    }
+
     private static void drawOutline(Component c) {
         if (notOutOfBounds(c)) {
             for (int i = 0; i < c.length; i++) {
@@ -1231,12 +1245,49 @@ public class MapGenerator {
     }
 
     public static void runWithInputString(char[] chars, Info info) {
+        prepareWithInputString(info.saveLastSeed);
+
+        Component c = createRoom(RANDOM2);
+        drawARec(c);
+        generateWorld(c, RANDOM2);
+        generateWorld1(c, RANDOM2);
+        move(chars, info.lastPlayerX, info.lastPlayerY);
+    }
+
+    public static void runWithoutMove() {
         prepareWithInputString();
 
         Component c = createRoom(RANDOM);
         drawARec(c);
         generateWorld(c, RANDOM);
-        generateWorld1(c, RANDOM);
-        move(chars, info.lastPlayerX, info.lastPlayerY);
+        generateWorld(c, RANDOM);
+        for (int i = WIDTH - 1; i > 0; i--) {
+            int flag = 0;
+            for (int j = HEIGHT - 1; j > 0; j--) {
+                if (world[i][j] == Tileset.FLOOR) {
+                    world[i][j] = Tileset.PLAYER;
+                    x = i;
+                    y = j;
+                    flag = 1;
+                    break;
+                }
+            }
+            if (flag == 1) {
+                break;
+            }
+        }
+        for (int i = 0; i < WIDTH; i++) {
+            int flag = 0;
+            for (int j = 0; j < HEIGHT; j++) {
+                if (world[i][j] == Tileset.WALL) {
+                    world[i][j + 1] = Tileset.LOCKED_DOOR;
+                    flag = 1;
+                    break;
+                }
+            }
+            if (flag == 1) {
+                break;
+            }
+        }
     }
 }
