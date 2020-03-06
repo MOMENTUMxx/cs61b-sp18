@@ -13,8 +13,8 @@ public class MapGenerator {
     private static final int WIDTH = 60;
     private static final int HEIGHT = 30;
 
-    private static Random RANDOM;
-    private static Random RANDOM2;
+    private static Random random;
+    private static Random random2;
 
     private static TERenderer ter = new TERenderer();
     static TETile[][] world;
@@ -99,27 +99,27 @@ public class MapGenerator {
         StdDraw.show();
     }
 
-    static void drawText(String s, int size) {
+    static void drawText(String s) {
         StdDraw.clear(Color.black);
-        Font smallFont = new Font("Monaco", Font.BOLD, size);
+        Font smallFont = new Font("Monaco", Font.BOLD, 35);
         StdDraw.setFont(smallFont);
         StdDraw.setPenColor(Color.white);
         StdDraw.text(WIDTH / 2, HEIGHT / 2, s);
         StdDraw.show();
     }
 
-    static void drawYellowText(String s, int size) {
+    static void drawYellowText(String s) {
         StdDraw.clear(Color.black);
-        Font smallFont = new Font("Monaco", Font.BOLD, size);
+        Font smallFont = new Font("Monaco", Font.BOLD, 50);
         StdDraw.setFont(smallFont);
         StdDraw.setPenColor(Color.yellow);
         StdDraw.text(WIDTH / 2, HEIGHT / 2, s);
         StdDraw.show();
     }
 
-    static void drawRedText(String s, int size) {
+    static void drawRedText(String s) {
         StdDraw.clear(Color.black);
-        Font smallFont = new Font("Monaco", Font.BOLD, size);
+        Font smallFont = new Font("Monaco", Font.BOLD, 30);
         StdDraw.setFont(smallFont);
         StdDraw.setPenColor(Color.red);
         StdDraw.text(WIDTH / 2, HEIGHT / 2, s);
@@ -134,15 +134,15 @@ public class MapGenerator {
         ter.initialize(WIDTH, HEIGHT);
 
         long seed = Game.SUBSEED;
-        RANDOM = new Random(seed);
+        random = new Random(seed);
         world = new TETile[WIDTH][HEIGHT];
         collection = new Component[1000];
         size = 0;
 
         // initialize tiles
-        for (int x = 0; x < WIDTH; x += 1) {
-            for (int y = 0; y < HEIGHT; y += 1) {
-                world[x][y] = Tileset.NOTHING;
+        for (int p = 0; p < WIDTH; p += 1) {
+            for (int q = 0; q < HEIGHT; q += 1) {
+                world[p][q] = Tileset.NOTHING;
             }
         }
     }
@@ -151,44 +151,44 @@ public class MapGenerator {
         // initialize the tile rendering engine with a window of size WIDTH x HEIGHT
         ter.initialize(WIDTH, HEIGHT);
 
-        RANDOM2 = new Random(ss);
+        random2 = new Random(ss);
         world = new TETile[WIDTH][HEIGHT];
         collection = new Component[1000];
         size = 0;
 
         // initialize tiles
-        for (int x = 0; x < WIDTH; x += 1) {
-            for (int y = 0; y < HEIGHT; y += 1) {
-                world[x][y] = Tileset.NOTHING;
+        for (int p = 0; p < WIDTH; p += 1) {
+            for (int q = 0; q < HEIGHT; q += 1) {
+                world[p][q] = Tileset.NOTHING;
             }
         }
     }
 
     public static void prepareWithInputString() {
         long seed = Game.SUBSEED;
-        RANDOM = new Random(seed);
+        random = new Random(seed);
         world = new TETile[WIDTH][HEIGHT];
         collection = new Component[1000];
         size = 0;
 
         // initialize tiles
-        for (int x = 0; x < WIDTH; x += 1) {
-            for (int y = 0; y < HEIGHT; y += 1) {
-                world[x][y] = Tileset.NOTHING;
+        for (int p = 0; p < WIDTH; p += 1) {
+            for (int q = 0; q < HEIGHT; q += 1) {
+                world[p][q] = Tileset.NOTHING;
             }
         }
     }
 
     public static void prepareWithInputString(long ss) {
-        RANDOM2 = new Random(ss);
+        random2 = new Random(ss);
         world = new TETile[WIDTH][HEIGHT];
         collection = new Component[1000];
         size = 0;
 
         // initialize tiles
-        for (int x = 0; x < WIDTH; x += 1) {
-            for (int y = 0; y < HEIGHT; y += 1) {
-                world[x][y] = Tileset.NOTHING;
+        for (int p = 0; p < WIDTH; p += 1) {
+            for (int q = 0; q < HEIGHT; q += 1) {
+                world[p][q] = Tileset.NOTHING;
             }
         }
     }
@@ -926,49 +926,53 @@ public class MapGenerator {
             }
             char key = StdDraw.nextKeyTyped();
             switch (key) {
-                case 'w': if (!(world[x][y + 1] == Tileset.WALL)) {
-                    if (world[x][y + 1] == Tileset.LOCKED_DOOR) {
-                        drawYellowText("YOU WIN !!!", 50);
-                        return;
+                case 'w':
+                    if (!(world[x][y + 1] == Tileset.WALL)) {
+                        if (world[x][y + 1] == Tileset.LOCKED_DOOR) {
+                            drawYellowText("YOU WIN !!!");
+                            return;
+                        }
+                        world[x][y] = Tileset.FLOOR;
+                        y += 1;
+                        world[x][y] = Tileset.PLAYER;
+                        ter.renderFrame(world);
                     }
-                    world[x][y] = Tileset.FLOOR;
-                    y += 1;
-                    world[x][y] = Tileset.PLAYER;
-                    ter.renderFrame(world);
-                }
                     break;
-                case 's': if (!(world[x][y - 1] == Tileset.WALL)) {
-                    if (world[x][y - 1] == Tileset.LOCKED_DOOR) {
-                        drawYellowText("YOU WIN !!!", 50);
-                        return;
+                case 's':
+                    if (!(world[x][y - 1] == Tileset.WALL)) {
+                        if (world[x][y - 1] == Tileset.LOCKED_DOOR) {
+                            drawYellowText("YOU WIN !!!");
+                            return;
+                        }
+                        world[x][y] = Tileset.FLOOR;
+                        y -= 1;
+                        world[x][y] = Tileset.PLAYER;
+                        ter.renderFrame(world);
                     }
-                    world[x][y] = Tileset.FLOOR;
-                    y -= 1;
-                    world[x][y] = Tileset.PLAYER;
-                    ter.renderFrame(world);
-                }
                     break;
-                case 'a': if (!(world[x - 1][y] == Tileset.WALL)) {
-                    if (world[x - 1][y] == Tileset.LOCKED_DOOR) {
-                        drawYellowText("YOU WIN !!!", 50);
-                        return;
+                case 'a':
+                    if (!(world[x - 1][y] == Tileset.WALL)) {
+                        if (world[x - 1][y] == Tileset.LOCKED_DOOR) {
+                            drawYellowText("YOU WIN !!!");
+                            return;
+                        }
+                        world[x][y] = Tileset.FLOOR;
+                        x -= 1;
+                        world[x][y] = Tileset.PLAYER;
+                        ter.renderFrame(world);
                     }
-                    world[x][y] = Tileset.FLOOR;
-                    x -= 1;
-                    world[x][y] = Tileset.PLAYER;
-                    ter.renderFrame(world);
-                }
                     break;
-                case 'd': if (!(world[x + 1][y] == Tileset.WALL)) {
-                    if (world[x + 1][y] == Tileset.LOCKED_DOOR) {
-                        drawYellowText("YOU WIN !!!", 50);
-                        return;
+                case 'd':
+                    if (!(world[x + 1][y] == Tileset.WALL)) {
+                        if (world[x + 1][y] == Tileset.LOCKED_DOOR) {
+                            drawYellowText("YOU WIN !!!");
+                            return;
+                        }
+                        world[x][y] = Tileset.FLOOR;
+                        x += 1;
+                        world[x][y] = Tileset.PLAYER;
+                        ter.renderFrame(world);
                     }
-                    world[x][y] = Tileset.FLOOR;
-                    x += 1;
-                    world[x][y] = Tileset.PLAYER;
-                    ter.renderFrame(world);
-                }
                     break;
                 case 'q': saveWorld(new Info(Game.SUBSEED, x, y));
                     System.exit(0);
@@ -1034,49 +1038,53 @@ public class MapGenerator {
             }
             char key = StdDraw.nextKeyTyped();
             switch (key) {
-                case 'w': if (!(world[lastX][lastY + 1] == Tileset.WALL)) {
-                    if (world[lastX][lastY + 1] == Tileset.LOCKED_DOOR) {
-                        drawYellowText("YOU WIN !!!", 50);
-                        return;
+                case 'w':
+                    if (!(world[lastX][lastY + 1] == Tileset.WALL)) {
+                        if (world[lastX][lastY + 1] == Tileset.LOCKED_DOOR) {
+                            drawYellowText("YOU WIN !!!");
+                            return;
+                        }
+                        world[lastX][lastY] = Tileset.FLOOR;
+                        lastY += 1;
+                        world[lastX][lastY] = Tileset.PLAYER;
+                        ter.renderFrame(world);
                     }
-                    world[lastX][lastY] = Tileset.FLOOR;
-                    lastY += 1;
-                    world[lastX][lastY] = Tileset.PLAYER;
-                    ter.renderFrame(world);
-                }
                     break;
-                case 's': if (!(world[lastX][lastY - 1] == Tileset.WALL)) {
-                    if (world[lastX][lastY - 1] == Tileset.LOCKED_DOOR) {
-                        drawYellowText("YOU WIN !!!", 50);
-                        return;
+                case 's':
+                    if (!(world[lastX][lastY - 1] == Tileset.WALL)) {
+                        if (world[lastX][lastY - 1] == Tileset.LOCKED_DOOR) {
+                            drawYellowText("YOU WIN !!!");
+                            return;
+                        }
+                        world[lastX][lastY] = Tileset.FLOOR;
+                        lastY -= 1;
+                        world[lastX][lastY] = Tileset.PLAYER;
+                        ter.renderFrame(world);
                     }
-                    world[lastX][lastY] = Tileset.FLOOR;
-                    lastY -= 1;
-                    world[lastX][lastY] = Tileset.PLAYER;
-                    ter.renderFrame(world);
-                }
                     break;
-                case 'a': if (!(world[lastX - 1][lastY] == Tileset.WALL)) {
-                    if (world[lastX - 1][lastY] == Tileset.LOCKED_DOOR) {
-                        drawYellowText("YOU WIN !!!", 50);
-                        return;
+                case 'a':
+                    if (!(world[lastX - 1][lastY] == Tileset.WALL)) {
+                        if (world[lastX - 1][lastY] == Tileset.LOCKED_DOOR) {
+                            drawYellowText("YOU WIN !!!");
+                            return;
+                        }
+                        world[lastX][lastY] = Tileset.FLOOR;
+                        lastX -= 1;
+                        world[lastX][lastY] = Tileset.PLAYER;
+                        ter.renderFrame(world);
                     }
-                    world[lastX][lastY] = Tileset.FLOOR;
-                    lastX -= 1;
-                    world[lastX][lastY] = Tileset.PLAYER;
-                    ter.renderFrame(world);
-                }
                     break;
-                case 'd': if (!(world[lastX + 1][lastY] == Tileset.WALL)) {
-                    if (world[lastX + 1][lastY] == Tileset.LOCKED_DOOR) {
-                        drawYellowText("YOU WIN !!!", 50);
-                        return;
+                case 'd':
+                    if (!(world[lastX + 1][lastY] == Tileset.WALL)) {
+                        if (world[lastX + 1][lastY] == Tileset.LOCKED_DOOR) {
+                            drawYellowText("YOU WIN !!!");
+                            return;
+                        }
+                        world[lastX][lastY] = Tileset.FLOOR;
+                        lastX += 1;
+                        world[lastX][lastY] = Tileset.PLAYER;
+                        ter.renderFrame(world);
                     }
-                    world[lastX][lastY] = Tileset.FLOOR;
-                    lastX += 1;
-                    world[lastX][lastY] = Tileset.PLAYER;
-                    ter.renderFrame(world);
-                }
                     break;
                 case 'q': saveWorld(new Info(loadWorld().saveLastSeed, lastX, lastY));
                     System.exit(0);
@@ -1211,10 +1219,10 @@ public class MapGenerator {
     public static void run() {
         prepare();
 
-        Component c = createRoom(RANDOM);
+        Component c = createRoom(random);
         drawARec(c);
-        generateWorld(c, RANDOM);
-        generateWorld1(c, RANDOM);
+        generateWorld(c, random);
+        generateWorld1(c, random);
 
         ter.renderFrame(world);
 
@@ -1224,10 +1232,10 @@ public class MapGenerator {
     public static void run(Info info) {
         prepare(info.saveLastSeed);
 
-        Component c = createRoom(RANDOM2);
+        Component c = createRoom(random2);
         drawARec(c);
-        generateWorld(c, RANDOM2);
-        generateWorld1(c, RANDOM2);
+        generateWorld(c, random2);
+        generateWorld1(c, random2);
 
         ter.renderFrame(world);
 
@@ -1237,30 +1245,30 @@ public class MapGenerator {
     public static void runWithInputString(char[] chars) {
         prepareWithInputString();
 
-        Component c = createRoom(RANDOM);
+        Component c = createRoom(random);
         drawARec(c);
-        generateWorld(c, RANDOM);
-        generateWorld1(c, RANDOM);
+        generateWorld(c, random);
+        generateWorld1(c, random);
         move(chars);
     }
 
     public static void runWithInputString(char[] chars, Info info) {
         prepareWithInputString(info.saveLastSeed);
 
-        Component c = createRoom(RANDOM2);
+        Component c = createRoom(random2);
         drawARec(c);
-        generateWorld(c, RANDOM2);
-        generateWorld1(c, RANDOM2);
+        generateWorld(c, random2);
+        generateWorld1(c, random2);
         move(chars, info.lastPlayerX, info.lastPlayerY);
     }
 
     public static void runWithoutMove() {
         prepareWithInputString();
 
-        Component c = createRoom(RANDOM);
+        Component c = createRoom(random);
         drawARec(c);
-        generateWorld(c, RANDOM);
-        generateWorld(c, RANDOM);
+        generateWorld(c, random);
+        generateWorld(c, random);
         for (int i = WIDTH - 1; i > 0; i--) {
             int flag = 0;
             for (int j = HEIGHT - 1; j > 0; j--) {

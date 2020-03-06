@@ -4,7 +4,8 @@ import byog.TileEngine.TETile;
 import edu.princeton.cs.introcs.StdDraw;
 
 import java.io.File;
-import java.util.regex.*;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 
 public class Game {
@@ -14,41 +15,43 @@ public class Game {
      * Method used for playing a fresh game. The game should start from the main menu.
      */
     public void playWithKeyboard() {
-       try {
-           MapGenerator.drawFrame();
-           while (true) {
-               if (!StdDraw.hasNextKeyTyped()) {
-                   continue;
-               }
-               char temp = StdDraw.nextKeyTyped();
-               switch (temp) {
-                   case 'n': MapGenerator.drawText("Please enter a seed and press 'S' to start", 35);
+        try {
+            MapGenerator.drawFrame();
+            while (true) {
+                if (!StdDraw.hasNextKeyTyped()) {
+                    continue;
+                }
+                char temp = StdDraw.nextKeyTyped();
+                switch (temp) {
+                    case 'n': MapGenerator.drawText("Please enter a seed and press 'S'");
                         StringBuilder input = new StringBuilder();
                         while (temp != 's') {
-                           if (!StdDraw.hasNextKeyTyped()) {
-                               continue;
-                           }
-                           temp = StdDraw.nextKeyTyped();
-                           input.append(temp);
+                            if (!StdDraw.hasNextKeyTyped()) {
+                                continue;
+                            }
+                            temp = StdDraw.nextKeyTyped();
+                            input.append(temp);
                         }
                         String s = input.substring(0, input.length() - 1);
                         SUBSEED = Long.parseLong(s);
                         MapGenerator.run();
                         break;
-                   case 'q': System.exit(0);
+                    case 'q': System.exit(0);
                         break;
-                   case 'l': File f = new File("./game.ser");
-                       if ((!f.exists())) {
-                       MapGenerator.drawRedText("No previous game has been saved.", 30);
-                       return;
-                   }
+                    case 'l': File f = new File("./game.ser");
+                        if ((!f.exists())) {
+                            MapGenerator.drawRedText("No previous game has been saved.");
+                            return;
+                        }
                         StdDraw.enableDoubleBuffering();
                         MapGenerator.run(MapGenerator.loadWorld());
-               }
-           }
-       } catch (NumberFormatException e) {
-           MapGenerator.drawRedText("Sorry, you didn't enter the proper number", 30);
-       }
+                        break;
+                    default:
+                }
+            }
+        } catch (NumberFormatException e) {
+            MapGenerator.drawRedText("Sorry, you didn't enter the proper number");
+        }
     }
 
     /**
@@ -89,10 +92,12 @@ public class Game {
         if (m2.find()) {
             if (m2.group(2) != null) {
                 SUBSEED = MapGenerator.loadWorld().saveLastSeed;
-                MapGenerator.runWithInputString(m2.group(2).toCharArray(), MapGenerator.loadWorld());
+                MapGenerator.runWithInputString(m2.group(2).toCharArray(),
+                        MapGenerator.loadWorld());
             }
             if (m2.group(3) != null) {
-                MapGenerator.saveWorld(new Info(MapGenerator.loadWorld().saveLastSeed, MapGenerator.lastXX, MapGenerator.lastYY));
+                MapGenerator.saveWorld(new Info(MapGenerator.loadWorld().saveLastSeed,
+                        MapGenerator.lastXX, MapGenerator.lastYY));
             }
             return MapGenerator.world;
         }
