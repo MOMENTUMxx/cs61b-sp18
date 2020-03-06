@@ -147,9 +147,11 @@ public class MapGenerator {
         }
     }
 
-    public static void prepareWithInputString() {
-        long seed = Game.SUBSEED;
-        RANDOM = new Random(seed);
+    public static void prepare(long ss) {
+        // initialize the tile rendering engine with a window of size WIDTH x HEIGHT
+        ter.initialize(WIDTH, HEIGHT);
+
+        RANDOM2 = new Random(ss);
         world = new TETile[WIDTH][HEIGHT];
         collection = new Component[1000];
         size = 0;
@@ -162,11 +164,9 @@ public class MapGenerator {
         }
     }
 
-    public static void prepare(long ss) {
-        // initialize the tile rendering engine with a window of size WIDTH x HEIGHT
-        ter.initialize(WIDTH, HEIGHT);
-
-        RANDOM2 = new Random(ss);
+    public static void prepareWithInputString() {
+        long seed = Game.SUBSEED;
+        RANDOM = new Random(seed);
         world = new TETile[WIDTH][HEIGHT];
         collection = new Component[1000];
         size = 0;

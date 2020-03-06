@@ -67,21 +67,14 @@ public class Game {
         // Fill out this method to run the game using the input passed in,
         // and return a 2D tile representation of the world that would have been
         // drawn if the same inputs had been given to playWithKeyboard().
-        /*char[] in = input.toCharArray();
-        StringBuilder str = new StringBuilder();
-        for (int i = 1; i < in.length - 1; i++) {
-            str.append(in[i]);
-        }
-        String s = str.toString();
-        SUBSEED = Long.parseLong(s);
-        MapGenerator.run();
-        return MapGenerator.world;*/
         String pattern1 = "(n)(\\d+)(s)([a-z]+)(:q)?";
         Pattern r1 = Pattern.compile(pattern1);
         Matcher m1 = r1.matcher(input);
         if (m1.find()) {
-            SUBSEED = Long.parseLong(m1.group(2));
-            MapGenerator.runWithInputString(m1.group(4).toCharArray());
+            if (m1.group(4) != null) {
+                SUBSEED = Long.parseLong(m1.group(2));
+                MapGenerator.runWithInputString(m1.group(4).toCharArray());
+            }
             if (m1.group(5) != null) {
                 MapGenerator.saveWorld(new Info(SUBSEED, MapGenerator.x, MapGenerator.y));
             }
@@ -101,6 +94,6 @@ public class Game {
             }
             return MapGenerator.world;
         }
-        return null;
+        return MapGenerator.world;
     }
 }
