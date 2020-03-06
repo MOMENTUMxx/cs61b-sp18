@@ -52,7 +52,7 @@ public class MapGenerator {
     }
 
     static void saveWorld(Info w) {
-        File f = new File("./byog/Core/game.ser");
+        File f = new File("./game.ser");
         try {
             if (!f.exists()) {
                 f.createNewFile();
