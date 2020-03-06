@@ -27,7 +27,7 @@ public class MapGenerator {
     static int lastYY = 0;
 
     static Info loadWorld() {
-        File f = new File("./game.ser");
+        File f = new File("./game.txt");
         if (f.exists()) {
             try {
                 FileInputStream fs = new FileInputStream(f);
