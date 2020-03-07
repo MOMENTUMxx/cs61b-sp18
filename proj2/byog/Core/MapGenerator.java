@@ -141,74 +141,51 @@ public class MapGenerator {
         StdDraw.show();
     }
 
+    private static void initializeWorld() {
+        world = new TETile[WIDTH][HEIGHT];
+        collection = new Component[1000];
+        size = 0;
+
+        // initialize tiles
+        for (int p = 0; p < WIDTH; p += 1) {
+            for (int q = 0; q < HEIGHT; q += 1) {
+                world[p][q] = Tileset.NOTHING;
+            }
+        }
+    }
+
     /**
      * 用键盘输入时初次运行游戏对世界的初始化，seed来自键盘输入
      */
-    public static void prepare() {
+    private static void prepare() {
         // initialize the tile rendering engine with a window of size WIDTH x HEIGHT
         ter.initialize(WIDTH, HEIGHT);
 
         long seed = Game.SUBSEED;
         random = new Random(seed);
-        world = new TETile[WIDTH][HEIGHT];
-        collection = new Component[1000];
-        size = 0;
-
-        // initialize tiles
-        for (int p = 0; p < WIDTH; p += 1) {
-            for (int q = 0; q < HEIGHT; q += 1) {
-                world[p][q] = Tileset.NOTHING;
-            }
-        }
+        initializeWorld();
     }
 
     /*用键盘作为输入读取存档时对游戏的初始化，此时seed来自存档中的记录*/
-    public static void prepare(long ss) {
+    private static void prepare(long ss) {
         // initialize the tile rendering engine with a window of size WIDTH x HEIGHT
         ter.initialize(WIDTH, HEIGHT);
 
         random2 = new Random(ss);
-        world = new TETile[WIDTH][HEIGHT];
-        collection = new Component[1000];
-        size = 0;
-
-        // initialize tiles
-        for (int p = 0; p < WIDTH; p += 1) {
-            for (int q = 0; q < HEIGHT; q += 1) {
-                world[p][q] = Tileset.NOTHING;
-            }
-        }
+        initializeWorld();
     }
 
     /*用字符串初次游戏时对世界的初始化，seed来自输入字符串*/
-    public static void prepareWithInputString() {
+    private static void prepareWithInputString() {
         long seed = Game.SUBSEED;
         random = new Random(seed);
-        world = new TETile[WIDTH][HEIGHT];
-        collection = new Component[1000];
-        size = 0;
-
-        // initialize tiles
-        for (int p = 0; p < WIDTH; p += 1) {
-            for (int q = 0; q < HEIGHT; q += 1) {
-                world[p][q] = Tileset.NOTHING;
-            }
-        }
+        initializeWorld();
     }
 
     /*用字符串读取存档时对世界的初始化，此时seed来自存档的记录*/
-    public static void prepareWithInputString(long ss) {
+    private static void prepareWithInputString(long ss) {
         random2 = new Random(ss);
-        world = new TETile[WIDTH][HEIGHT];
-        collection = new Component[1000];
-        size = 0;
-
-        // initialize tiles
-        for (int p = 0; p < WIDTH; p += 1) {
-            for (int q = 0; q < HEIGHT; q += 1) {
-                world[p][q] = Tileset.NOTHING;
-            }
-        }
+        initializeWorld();
     }
 
     /*绘制给定的Component的墙壁*/
@@ -227,7 +204,7 @@ public class MapGenerator {
     }
 
     /*创建世界中的第一个Component,位置位于屏幕中间的随机处*/
-    public static Component createRoom(Random r) {
+    private static Component createRoom(Random r) {
 //        int xStart = RandomUtils.uniform(r, 25, 30);
 //        int yStart = RandomUtils.uniform(r, 10, 15);
         int xStart = 0;
@@ -241,7 +218,7 @@ public class MapGenerator {
     }
 
     /*绘制一个完整的Component（包括墙壁和地板）*/
-    public static void drawARec(Component c) {
+    private static void drawARec(Component c) {
         if (notOutOfBounds(c)) {
             drawOutline(c);
 
@@ -258,7 +235,7 @@ public class MapGenerator {
      * @param c 房间
      * @param r 用来做伪随机的Random实例
      */
-    public static Component rHallwayNearRoom(Component c, Random r) {
+    private static Component rHallwayNearRoom(Component c, Random r) {
         int xStart = c.xStart + c.length - 1;
         int yStart = c.yStart + 1;
         int length = RandomUtils.uniform(r, 4, WIDTH / 8);
@@ -275,7 +252,7 @@ public class MapGenerator {
      * 绘制房间右侧的走廊
      * @param c 走廊
      */
-    public static void drawRNeighborHallway(Component c) {
+    private static void drawRNeighborHallway(Component c) {
         if (notOutOfBounds(c)) {
             drawOutline(c);
 
@@ -292,7 +269,7 @@ public class MapGenerator {
      * @param c 房间
      * @param r 用来做伪随机的Random实例
      */
-    public static Component lHallwayNearRoom(Component c, Random r) {
+    private static Component lHallwayNearRoom(Component c, Random r) {
         int length = RandomUtils.uniform(r, 4, WIDTH / 8);
         int width = 3;
         int xStart = c.xStart - length;
@@ -309,7 +286,7 @@ public class MapGenerator {
      * 绘制房间左侧的走廊
      * @param c 走廊
      */
-    public static void drawLNeighborHallway(Component c) {
+    private static void drawLNeighborHallway(Component c) {
         if (notOutOfBounds(c)) {
             drawOutline(c);
 
@@ -326,7 +303,7 @@ public class MapGenerator {
      * @param c 房间
      * @param r 用来做伪随机的Random实例
      */
-    public static Component uHallwayNearRoom(Component c, Random r) {
+    private static Component uHallwayNearRoom(Component c, Random r) {
         int xStart = c.xStart + 1;
         int yStart = c.yStart + c.width - 1;
         int length = 3;
@@ -343,7 +320,7 @@ public class MapGenerator {
      * 绘制房间顶侧的走廊
      * @param c 走廊
      */
-    public static void drawUNeighborHallway(Component c) {
+    private static void drawUNeighborHallway(Component c) {
         if (notOutOfBounds(c)) {
             drawOutline(c);
 
@@ -360,7 +337,7 @@ public class MapGenerator {
      * @param c 房间
      * @param r 用来做伪随机的Random实例
      */
-    public static Component dHallwayNearRoom(Component c, Random r) {
+    private static Component dHallwayNearRoom(Component c, Random r) {
         int length = 3;
         int width = RandomUtils.uniform(r, 4, HEIGHT / 4);
         int xStart = c.xStart + 1;
@@ -377,7 +354,7 @@ public class MapGenerator {
      * 绘制房间底侧的走廊
      * @param c 走廊
      */
-    public static void drawDNeighborHallway(Component c) {
+    private static void drawDNeighborHallway(Component c) {
         if (notOutOfBounds(c)) {
             drawOutline(c);
 
@@ -389,7 +366,7 @@ public class MapGenerator {
         }
     }
 
-    public static Component uHallwayNearRHallway(Component c, Random r) {
+    private static Component uHallwayNearRHallway(Component c, Random r) {
         int xStart = c.xStart + c.length - 1;
         int yStart = c.yStart;
         int length = 3;
@@ -402,7 +379,7 @@ public class MapGenerator {
         return cc;
     }
 
-    public static void drawUHallwayNearRHallway(Component c) {
+    private static void drawUHallwayNearRHallway(Component c) {
         if (notOutOfBounds(c)) {
             drawOutline(c);
 
@@ -415,7 +392,7 @@ public class MapGenerator {
         }
     }
 
-    public static Component dHallwayNearRHallway(Component c, Random r) {
+    private static Component dHallwayNearRHallway(Component c, Random r) {
         int length = 3;
         int width = RandomUtils.uniform(r, 4, HEIGHT / 4);
         int xStart = c.xStart + c.length - 1;
@@ -428,7 +405,7 @@ public class MapGenerator {
         return cc;
     }
 
-    public static void drawDHallwayNearRHallway(Component c) {
+    private static void drawDHallwayNearRHallway(Component c) {
         if (notOutOfBounds(c)) {
             drawOutline(c);
 
@@ -441,7 +418,7 @@ public class MapGenerator {
         }
     }
 
-    public static Component uHallwayNearLHallway(Component c, Random r) {
+    private static Component uHallwayNearLHallway(Component c, Random r) {
         int xStart = c.xStart - 2;
         int yStart = c.yStart;
         int length = 3;
@@ -454,7 +431,7 @@ public class MapGenerator {
         return cc;
     }
 
-    public static void drawUHallwayNearLHallway(Component c) {
+    private static void drawUHallwayNearLHallway(Component c) {
         if (notOutOfBounds(c)) {
             drawOutline(c);
 
@@ -467,7 +444,7 @@ public class MapGenerator {
         }
     }
 
-    public static Component dHallwayNearLHallway(Component c, Random r) {
+    private static Component dHallwayNearLHallway(Component c, Random r) {
         int length = 3;
         int width = RandomUtils.uniform(r, 4, HEIGHT / 4);
         int xStart = c.xStart - 2;
@@ -480,7 +457,7 @@ public class MapGenerator {
         return cc;
     }
 
-    public static void drawDHallwayNearLHallway(Component c) {
+    private static void drawDHallwayNearLHallway(Component c) {
         if (notOutOfBounds(c)) {
             drawOutline(c);
 
@@ -493,7 +470,7 @@ public class MapGenerator {
         }
     }
 
-    public static Component lHallwayNearUHallway(Component c, Random r) {
+    private static Component lHallwayNearUHallway(Component c, Random r) {
         int length = RandomUtils.uniform(r, 4, HEIGHT / 4);
         int width = 3;
         int xStart = c.xStart - length + 3;
@@ -506,7 +483,7 @@ public class MapGenerator {
         return cc;
     }
 
-    public static void drawLHallwayNearUHallway(Component c) {
+    private static void drawLHallwayNearUHallway(Component c) {
         if (notOutOfBounds(c)) {
             drawOutline(c);
 
@@ -519,7 +496,7 @@ public class MapGenerator {
         }
     }
 
-    public static Component rHallwayNearUHallway(Component c, Random r) {
+    private static Component rHallwayNearUHallway(Component c, Random r) {
         int xStart = c.xStart;
         int yStart = c.yStart + c.width - 1;
         int length = RandomUtils.uniform(r, 4, HEIGHT / 4);
@@ -532,7 +509,7 @@ public class MapGenerator {
         return cc;
     }
 
-    public static void drawRHallwayNearUHallway(Component c) {
+    private static void drawRHallwayNearUHallway(Component c) {
         if (notOutOfBounds(c)) {
             drawOutline(c);
 
@@ -545,7 +522,7 @@ public class MapGenerator {
         }
     }
 
-    public static Component lHallwayNearDHallway(Component c, Random r) {
+    private static Component lHallwayNearDHallway(Component c, Random r) {
         int length = RandomUtils.uniform(r, 4, HEIGHT / 4);
         int width = 3;
         int xStart = c.xStart - length + 3;
@@ -558,7 +535,7 @@ public class MapGenerator {
         return cc;
     }
 
-    public static void drawLHallwayNearDHallway(Component c) {
+    private static void drawLHallwayNearDHallway(Component c) {
         if (notOutOfBounds(c)) {
             drawOutline(c);
 
@@ -571,7 +548,7 @@ public class MapGenerator {
         }
     }
 
-    public static Component rHallwayNearDHallway(Component c, Random r) {
+    private static Component rHallwayNearDHallway(Component c, Random r) {
         int xStart = c.xStart;
         int yStart = c.yStart - 1;
         int length = RandomUtils.uniform(r, 4, HEIGHT / 4);
@@ -584,7 +561,7 @@ public class MapGenerator {
         return cc;
     }
 
-    public static void drawRHallwayNearDHallway(Component c) {
+    private static void drawRHallwayNearDHallway(Component c) {
         if (notOutOfBounds(c)) {
             drawOutline(c);
 
@@ -597,7 +574,7 @@ public class MapGenerator {
         }
     }
 
-    public static Component rRoomNearHallway(Component c, Random r) {
+    private static Component rRoomNearHallway(Component c, Random r) {
         int xStart = c.xStart + c.length - 1;
         int yStart = c.yStart - 1;
         int length = RandomUtils.uniform(r, 4, 7);
@@ -610,7 +587,7 @@ public class MapGenerator {
         return cc;
     }
 
-    public static void drawRNeighborRoom(Component hallway, Component room) {
+    private static void drawRNeighborRoom(Component hallway, Component room) {
         if (notOutOfBounds(hallway) && notOutOfBounds(room)) {
             drawOutline(room);
 
@@ -623,7 +600,7 @@ public class MapGenerator {
         }
     }
 
-    public static Component lRoomNearHallway(Component c, Random r) {
+    private static Component lRoomNearHallway(Component c, Random r) {
         int length = RandomUtils.uniform(r, 4, 7);
         int width = RandomUtils.uniform(r, 4, 7);
         int xStart = c.xStart - length + 1;
@@ -636,7 +613,7 @@ public class MapGenerator {
         return cc;
     }
 
-    public static void drawLNeighborRoom(Component hallway, Component room) {
+    private static void drawLNeighborRoom(Component hallway, Component room) {
         if (notOutOfBounds(hallway) && notOutOfBounds(room)) {
             drawOutline(room);
 
@@ -650,7 +627,7 @@ public class MapGenerator {
         }
     }
 
-    public static Component uRoomNearHallway(Component c, Random r) {
+    private static Component uRoomNearHallway(Component c, Random r) {
         int xStart = c.xStart - 1;
         int yStart = c.yStart + c.width - 1;
         int length = RandomUtils.uniform(r, 4, 7);
@@ -663,7 +640,7 @@ public class MapGenerator {
         return cc;
     }
 
-    public static void drawUNeighborRoom(Component hallway, Component room) {
+    private static void drawUNeighborRoom(Component hallway, Component room) {
         if (notOutOfBounds(hallway) && notOutOfBounds(room)) {
             drawOutline(room);
 
@@ -676,7 +653,7 @@ public class MapGenerator {
         }
     }
 
-    public static Component dRoomNearHallway(Component c, Random r) {
+    private static Component dRoomNearHallway(Component c, Random r) {
         int length = RandomUtils.uniform(r, 4, 7);
         int width = RandomUtils.uniform(r, 4, 7);
         int xStart = c.xStart - 1;
@@ -689,7 +666,7 @@ public class MapGenerator {
         return cc;
     }
 
-    public static void drawDNeighborRoom(Component hallway, Component room) {
+    private static void drawDNeighborRoom(Component hallway, Component room) {
         if (notOutOfBounds(hallway) && notOutOfBounds(room)) {
             drawOutline(room);
 
@@ -704,7 +681,7 @@ public class MapGenerator {
     }
 
     /*判断Component是否超出屏幕范围*/
-    public static boolean notOutOfBounds(Component c) {
+    private static boolean notOutOfBounds(Component c) {
         return (c.xStart >= 0 && c.xStart < WIDTH
                 && c.xStart + c.length < WIDTH
                 && c.yStart >= 0 && c.yStart < HEIGHT
@@ -712,7 +689,7 @@ public class MapGenerator {
     }
 
     /*判断两个Component是否有重叠*/
-    public static boolean notIntersect(Component c1, Component c2) {
+    private static boolean notIntersect(Component c1, Component c2) {
         int num = 0;
         for (int i = c1.xStart; i < c1.xStart + c1.length; i++) {
             for (int j = c2.xStart; j < c2.xStart + c2.length; j++) {
@@ -729,7 +706,7 @@ public class MapGenerator {
     }
 
     /*判断该Component和其他所有Component是否有重叠*/
-    public static boolean notIntersect(Component c) {
+    private static boolean notIntersect(Component c) {
         for (int i = 0; i < size - 1; i++) {
             if (!notIntersect(collection[i], c)) {
                 return false;
@@ -738,8 +715,8 @@ public class MapGenerator {
         return true;
     }
 
-    /*以第一个创建的Component为中心生成右上部分的世界*/
-    public static void generateWorldRU(Component c, Random r) {
+    /*以第一个创建的Component为中心生成右上部分的世界（递归）*/
+    private static void generateWorldRU(Component c, Random r) {
         Component rHallway = rHallwayNearRoom(c, r);
         if (notOutOfBounds(rHallway) && notIntersect(rHallway)) {
             drawRNeighborHallway(rHallway);
@@ -777,7 +754,7 @@ public class MapGenerator {
                         generateWorldRU(dRoom, r);
                     }
                     break;
-                default: return;
+                default:
             }
         }
 
@@ -823,8 +800,8 @@ public class MapGenerator {
         }
     }
 
-    /*以第一个创建的Component为中心生成左下部分的世界*/
-    public static void generateWorldLD(Component c, Random r) {
+    /*以第一个创建的Component为中心生成左下部分的世界（递归）*/
+    private static void generateWorldLD(Component c, Random r) {
         Component lHallway = lHallwayNearRoom(c, r);
         if (notOutOfBounds(lHallway) && notIntersect(lHallway)) {
             drawLNeighborHallway(lHallway);
@@ -862,7 +839,7 @@ public class MapGenerator {
                         generateWorldRU(dRoom, r);
                     }
                     break;
-                default: return;
+                default:
             }
         }
 
@@ -917,8 +894,8 @@ public class MapGenerator {
         StdDraw.show();
     }
 
-    /*用键盘作为输入初次游戏时对玩家按键的响应*/
-    private static void move() {
+    /*在世界中标定玩家的位置*/
+    private static void setPlayerLocation() {
         for (int i = WIDTH - 1; i > 0; i--) {
             int flag = 0;
             for (int j = HEIGHT - 1; j > 0; j--) {
@@ -935,6 +912,10 @@ public class MapGenerator {
                 break;
             }
         }
+    }
+
+    /*在世界中标定门的位置*/
+    private static void setDoorLocation() {
         for (int i = 0; i < WIDTH; i++) {
             int flag = 0;
             for (int j = 0; j < HEIGHT; j++) {
@@ -948,43 +929,53 @@ public class MapGenerator {
                 break;
             }
         }
+    }
+
+    /*跟随鼠标移动显示Tile的信息*/
+    private static void tileDescription() {
+        int corX = (int) StdDraw.mouseX();
+        int corY = (int) StdDraw.mouseY();
+        if (corX == WIDTH) {
+            corX -= 1;
+        }
+        if (corX == -1) {
+            corX += 1;
+        }
+        if (corY == HEIGHT) {
+            corY -= 1;
+        }
+        if (corY == -1) {
+            corY += 1;
+        }
+        if (world[corX][corY] == Tileset.FLOOR) {
+            drawStatus("floor");
+            ter.renderFrame(world);
+
+        }
+        if (world[corX][corY] == Tileset.WALL) {
+            drawStatus("wall");
+            ter.renderFrame(world);
+        }
+        if (world[corX][corY] == Tileset.LOCKED_DOOR) {
+            drawStatus("locked door");
+            ter.renderFrame(world);
+        }
+        if (world[corX][corY] == Tileset.PLAYER) {
+            drawStatus("player");
+            ter.renderFrame(world);
+        }
+        if (world[corX][corY] == Tileset.NOTHING) {
+            drawStatus("               ");
+            ter.renderFrame(world);
+        }
+    }
+
+    /*用键盘作为输入初次游戏时对玩家按键的响应*/
+    private static void move() {
+        setDoorLocation();
+        setPlayerLocation();
         while (true) {
-            int corX = (int) StdDraw.mouseX();
-            int corY = (int) StdDraw.mouseY();
-            if (corX == WIDTH) {
-                corX -= 1;
-            }
-            if (corX == -1) {
-                corX += 1;
-            }
-            if (corY == HEIGHT) {
-                corY -= 1;
-            }
-            if (corY == -1) {
-                corY += 1;
-            }
-            if (world[corX][corY] == Tileset.FLOOR) {
-                drawStatus("floor");
-                ter.renderFrame(world);
-
-            }
-            if (world[corX][corY] == Tileset.WALL) {
-                drawStatus("wall");
-                ter.renderFrame(world);
-            }
-            if (world[corX][corY] == Tileset.LOCKED_DOOR) {
-                drawStatus("locked door");
-                ter.renderFrame(world);
-            }
-            if (world[corX][corY] == Tileset.PLAYER) {
-                drawStatus("player");
-                ter.renderFrame(world);
-            }
-            if (world[corX][corY] == Tileset.NOTHING) {
-                drawStatus("               ");
-                ter.renderFrame(world);
-            }
-
+            tileDescription();
             if (!StdDraw.hasNextKeyTyped()) {
                 continue;
             }
@@ -1049,56 +1040,9 @@ public class MapGenerator {
     /*用键盘作为输入读取存档时对玩家按键的响应，此时玩家的位置来自存档的记录*/
     private static void move(int lastX, int lastY) {
         world[lastX][lastY] = Tileset.PLAYER;
-        for (int i = 0; i < WIDTH; i++) {
-            int flag = 0;
-            for (int j = 0; j < HEIGHT; j++) {
-                if (world[i][j] == Tileset.WALL) {
-                    world[i][j + 1] = Tileset.LOCKED_DOOR;
-                    flag = 1;
-                    break;
-                }
-            }
-            if (flag == 1) {
-                break;
-            }
-        }
+        setDoorLocation();
         while (true) {
-            int corX = (int) StdDraw.mouseX();
-            int corY = (int) StdDraw.mouseY();
-            if (corX == WIDTH) {
-                corX -= 1;
-            }
-            if (corX == -1) {
-                corX += 1;
-            }
-            if (corY == HEIGHT) {
-                corY -= 1;
-            }
-            if (corY == -1) {
-                corY += 1;
-            }
-            if (world[corX][corY] == Tileset.FLOOR) {
-                drawStatus("floor");
-                ter.renderFrame(world);
-
-            }
-            if (world[corX][corY] == Tileset.WALL) {
-                drawStatus("wall");
-                ter.renderFrame(world);
-            }
-            if (world[corX][corY] == Tileset.LOCKED_DOOR) {
-                drawStatus("locked door");
-                ter.renderFrame(world);
-            }
-            if (world[corX][corY] == Tileset.PLAYER) {
-                drawStatus("player");
-                ter.renderFrame(world);
-            }
-            if (world[corX][corY] == Tileset.NOTHING) {
-                drawStatus("               ");
-                ter.renderFrame(world);
-            }
-
+            tileDescription();
             if (!StdDraw.hasNextKeyTyped()) {
                 continue;
             }
@@ -1162,34 +1106,8 @@ public class MapGenerator {
 
     /*用字符串作为输入初次游戏时对字符串中命令的响应*/
     private static void move(char[] c) {
-        for (int i = WIDTH - 1; i > 0; i--) {
-            int flag = 0;
-            for (int j = HEIGHT - 1; j > 0; j--) {
-                if (world[i][j] == Tileset.FLOOR) {
-                    world[i][j] = Tileset.PLAYER;
-                    x = i;
-                    y = j;
-                    flag = 1;
-                    break;
-                }
-            }
-            if (flag == 1) {
-                break;
-            }
-        }
-        for (int i = 0; i < WIDTH; i++) {
-            int flag = 0;
-            for (int j = 0; j < HEIGHT; j++) {
-                if (world[i][j] == Tileset.WALL) {
-                    world[i][j + 1] = Tileset.LOCKED_DOOR;
-                    flag = 1;
-                    break;
-                }
-            }
-            if (flag == 1) {
-                break;
-            }
-        }
+        setPlayerLocation();
+        setDoorLocation();
         for (char value : c) {
             switch (value) {
                 case 'w':
@@ -1230,19 +1148,7 @@ public class MapGenerator {
         world[lastX][lastY] = Tileset.PLAYER;
         lastXX = lastX;
         lastYY = lastY;
-        for (int i = 0; i < WIDTH; i++) {
-            int flag = 0;
-            for (int j = 0; j < HEIGHT; j++) {
-                if (world[i][j] == Tileset.WALL) {
-                    world[i][j + 1] = Tileset.LOCKED_DOOR;
-                    flag = 1;
-                    break;
-                }
-            }
-            if (flag == 1) {
-                break;
-            }
-        }
+        setDoorLocation();
         for (char value : c) {
             switch (value) {
                 case 'w':
@@ -1343,33 +1249,7 @@ public class MapGenerator {
         drawARec(c);
         generateWorldRU(c, random);
         generateWorldRU(c, random);
-        for (int i = WIDTH - 1; i > 0; i--) {
-            int flag = 0;
-            for (int j = HEIGHT - 1; j > 0; j--) {
-                if (world[i][j] == Tileset.FLOOR) {
-                    world[i][j] = Tileset.PLAYER;
-                    x = i;
-                    y = j;
-                    flag = 1;
-                    break;
-                }
-            }
-            if (flag == 1) {
-                break;
-            }
-        }
-        for (int i = 0; i < WIDTH; i++) {
-            int flag = 0;
-            for (int j = 0; j < HEIGHT; j++) {
-                if (world[i][j] == Tileset.WALL) {
-                    world[i][j + 1] = Tileset.LOCKED_DOOR;
-                    flag = 1;
-                    break;
-                }
-            }
-            if (flag == 1) {
-                break;
-            }
-        }
+        setPlayerLocation();
+        setDoorLocation();
     }
 }
