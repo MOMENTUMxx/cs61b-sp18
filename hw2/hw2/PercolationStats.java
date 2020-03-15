@@ -20,7 +20,7 @@ public class PercolationStats {
                 int y = StdRandom.uniform(N);
                 p.open(x, y);
             }
-            threshold[temp++] = (p.numberOfOpenSites()) / (double)(N * N);
+            threshold[temp++] = (p.numberOfOpenSites()) / (double) (N * N);
         }
     }
 
@@ -38,5 +38,13 @@ public class PercolationStats {
 
     public double confidenceHigh() {
         return mean() + 1.96 * stddev() / Math.sqrt(T);
+    }
+
+    public static void main(String[] args) {
+        PercolationStats pp = new PercolationStats(2, 10000, new PercolationFactory());
+        System.out.println(pp.mean());
+        System.out.println(pp.stddev());
+        System.out.println(pp.confidenceLow());
+        System.out.println(pp.confidenceHigh());
     }
 }

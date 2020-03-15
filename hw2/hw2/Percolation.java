@@ -29,25 +29,26 @@ public class Percolation {
         return r * N + c;
     }
 
-    public void open(int row, int col) {
+    private void validate(int row, int col) {
         if (!(row >= 0 && row <= N - 1 && col >= 0 && col <= N - 1)) {
             throw new IndexOutOfBoundsException();
         }
+    }
+
+    public void open(int row, int col) {
+        validate(row, col);
         if (!model[row][col].equals("Open")) {
             model[row][col] = "Open";
             openNum++;
         }
         if (row == 0) {
             wqu.union(TOP, xyTo1D(row, col));
+        } else if (model[row - 1][col].equals("Open")) {
+            wqu.union(xyTo1D(row, col), xyTo1D(row - 1, col));
         }
 //        if (row == N - 1) {
 //            wqu.union(BOTTOM, xyTo1D(row, col));
 //        }
-        if (row != 0) {
-            if (model[row - 1][col].equals("Open")) {
-                wqu.union(xyTo1D(row, col), xyTo1D(row - 1, col));
-            }
-        }
         if (row != N - 1) {
             if (model[row + 1][col].equals("Open")) {
                 wqu.union(xyTo1D(row, col), xyTo1D(row + 1, col));
@@ -66,16 +67,12 @@ public class Percolation {
     }
 
     public boolean isOpen(int row, int col) {
-        if (!(row >= 0 && row <= N - 1 && col >= 0 && col <= N - 1)) {
-            throw new IndexOutOfBoundsException();
-        }
+        validate(row, col);
         return (model[row][col].equals("Open"));
     }
 
     public boolean isFull(int row, int col) {
-        if (!(row >= 0 && row <= N - 1 && col >= 0 && col <= N - 1)) {
-            throw new IndexOutOfBoundsException();
-        }
+        validate(row, col);
         return wqu.connected(TOP, xyTo1D(row, col));
     }
 
@@ -91,9 +88,5 @@ public class Percolation {
             }
         }
         return false;
-    }
-
-    public static void main(String[] args) {
-
     }
 }
