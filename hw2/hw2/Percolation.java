@@ -7,13 +7,13 @@ public class Percolation {
     private int openNum;
     private String[][] model;
     private WeightedQuickUnionUF wqu;
-    private static final int TOP = 99998;
-//    public static final int BOTTOM = 99999;
+    private int TOP;
 
     public Percolation(int N) {
         if (N <= 0) {
             throw new IllegalArgumentException();
         }
+        TOP = N * N;
         this.N = N;
         openNum = 0;
         model = new String[N][N];
@@ -22,7 +22,7 @@ public class Percolation {
                 model[i][j] = "Blocked";
             }
         }
-        wqu = new WeightedQuickUnionUF(100000);
+        wqu = new WeightedQuickUnionUF(N * N + 1);
     }
 
     private int xyTo1D(int r, int c) {
@@ -46,9 +46,6 @@ public class Percolation {
         } else if (model[row - 1][col].equals("Open")) {
             wqu.union(xyTo1D(row, col), xyTo1D(row - 1, col));
         }
-//        if (row == N - 1) {
-//            wqu.union(BOTTOM, xyTo1D(row, col));
-//        }
         if (row != N - 1) {
             if (model[row + 1][col].equals("Open")) {
                 wqu.union(xyTo1D(row, col), xyTo1D(row + 1, col));
@@ -81,7 +78,6 @@ public class Percolation {
     }
 
     public boolean percolates() {
-//        return wqu.connected(TOP, BOTTOM);
         for (int i = 0; i < N; i++) {
             if (wqu.connected(TOP, xyTo1D(N - 1, i))) {
                 return true;
