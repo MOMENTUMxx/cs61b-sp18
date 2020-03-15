@@ -4,7 +4,7 @@ import edu.princeton.cs.introcs.StdStats;
 import edu.princeton.cs.introcs.StdRandom;
 
 public class PercolationStats {
-    private int[] threshold;
+    private double[] threshold;
     private int temp;
     private int T;
     public PercolationStats(int N, int T, PercolationFactory pf) {
@@ -12,7 +12,7 @@ public class PercolationStats {
             throw new IllegalArgumentException();
         }
         this.T = T;
-        threshold = new int[T];
+        threshold = new double[T];
         for (int i = 0; i < T; i++) {
             Percolation p = pf.make(N);
             while (!p.percolates()) {
@@ -20,7 +20,7 @@ public class PercolationStats {
                 int y = StdRandom.uniform(N);
                 p.open(x, y);
             }
-            threshold[temp++] = p.numberOfOpenSites() / N;
+            threshold[temp++] = (p.numberOfOpenSites()) / (double)(N * N);
         }
     }
 
