@@ -3,11 +3,11 @@ package hw2;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
-    int N;
-    int openNum;
-    String[][] model;
-    WeightedQuickUnionUF wqu;
-    public static final int TOP = 99998;
+    private int N;
+    private int openNum;
+    private String[][] model;
+    private WeightedQuickUnionUF wqu;
+    private static final int TOP = 99998;
 //    public static final int BOTTOM = 99999;
 
     public Percolation(int N) {
@@ -33,8 +33,10 @@ public class Percolation {
         if (!(row >= 0 && row <= N - 1 && col >= 0 && col <= N - 1)) {
             throw new IndexOutOfBoundsException();
         }
-        model[row][col] = "Open";
-        openNum++;
+        if (!model[row][col].equals("Open")) {
+            model[row][col] = "Open";
+            openNum++;
+        }
         if (row == 0) {
             wqu.union(TOP, xyTo1D(row, col));
         }

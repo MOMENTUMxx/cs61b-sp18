@@ -4,9 +4,9 @@ import edu.princeton.cs.introcs.StdStats;
 import edu.princeton.cs.introcs.StdRandom;
 
 public class PercolationStats {
-    int[] open;
-    int temp;
-    int T;
+    private int[] open;
+    private int temp;
+    private int T;
     public PercolationStats(int N, int T, PercolationFactory pf) {
         if (N <= 0 || T <= 0) {
             throw new IllegalArgumentException();
@@ -20,7 +20,7 @@ public class PercolationStats {
                 int y = StdRandom.uniform(N);
                 p.open(x, y);
             }
-            open[temp++] = p.openNum;
+            open[temp++] = p.numberOfOpenSites();
         }
     }
 
