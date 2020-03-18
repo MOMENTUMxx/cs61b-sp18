@@ -53,17 +53,34 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      */
     @Override
     public V get(K key) {
-        for (ArrayMap entry: buckets) {
+        for (ArrayMap<K, V> entry: buckets) {
             if (entry.containsKey(key)) {
-                return (V) entry.get(key);
+                return entry.get(key);
             }
         }
         return null;
     }
 
+    private void resize(int capacity) {
+        ArrayMap<K, V>[] newBuckets = new ArrayMap[capacity];
+        for (int i = 0; i < newBuckets.length; i += 1) {
+            newBuckets[i] = new ArrayMap<>();
+        }
+        for (ArrayMap<K, V> entry: buckets) {
+            for (K key: entry.keySet()) {
+                int hashCode = Math.floorMod(key.hashCode(), capacity);
+                newBuckets[hashCode].put(key, entry.get(key));
+            }
+        }
+        buckets = newBuckets;
+    }
+
     /* Associates the specified value with the specified key in this map. */
     @Override
     public void put(K key, V value) {
+        if (loadFactor() >= MAX_LF) {
+            resize(buckets.length * 2);
+        }
         int hashCode = hash(key);
         int temp = buckets[hashCode].size;
         buckets[hashCode].put(key, value);
