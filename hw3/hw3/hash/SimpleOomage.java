@@ -32,7 +32,7 @@ public class SimpleOomage implements Oomage {
         if (!USE_PERFECT_HASH) {
             return red + green + blue;
         } else {
-            return (red / 5) * 33 * 33 + (green / 5) * 33 + (blue / 5);
+            return (red / 5) * 52 * 52 + (green / 5) * 52 + (blue / 5); //要选超过255/5的数作为基
         }
     }
 
