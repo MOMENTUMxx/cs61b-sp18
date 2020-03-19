@@ -33,18 +33,27 @@ public class TestComplexOomage {
         assertTrue(OomageTestUtility.haveNiceHashCodeSpread(oomages, 10));
     }
 
-    /* TODO: Create a list of Complex Oomages called deadlyList
-     * that shows the flaw in the hashCode function.
-     */
-    /*
     @Test
     public void testWithDeadlyParams() {
         List<Oomage> deadlyList = new ArrayList<>();
 
         // Your code here.
+        /* 由Hint.java可知，当hashcode超过256的三次方时会由于超过int的范围导致溢出为0,因此，
+           要体现hashcode()的缺陷只需要让每一个哈希值都溢出为0.(randomComplexOomage
+           方法虽然会溢出但是是在中间溢出，所以最后计算出的哈希值不为0) */
+        int N = 10000;
+        for (int i = 0; i < N; i++) {
+            ArrayList<Integer> params = new ArrayList<>();
+            params.add(i);
+            for (int j = 0; j < 4; j++) {
+                params.add(1);
+            }
+            ComplexOomage co = new ComplexOomage(params);
+            deadlyList.add(co);
+        }
 
         assertTrue(OomageTestUtility.haveNiceHashCodeSpread(deadlyList, 10));
-    } */
+    }
 
     /** Calls tests for SimpleOomage. */
     public static void main(String[] args) {
