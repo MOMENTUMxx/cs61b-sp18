@@ -168,9 +168,9 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     public T removeMin() {
         T item = contents[1].item();
         swap(1, size);
-        contents[size] = null;
+        size = size - 1;
         sink(1);
-        size--;
+        contents[size + 1] = null;
         return item;
     }
 
