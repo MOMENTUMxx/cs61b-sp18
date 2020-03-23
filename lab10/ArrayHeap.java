@@ -104,9 +104,9 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
         validateSinkSwimArg(index);
 
-        while (index > 1 && index == min(index, index / 2)) {
-            swap(index, index / 2);
-            index = index / 2;
+        while (index > 1 && index == min(index, parentIndex(index))) {
+            swap(index, parentIndex(index));
+            index = parentIndex(index);
         }
     }
 
@@ -117,10 +117,10 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
         validateSinkSwimArg(index);
 
-        while (2 * index <= size()) {
-            int i = 2 * index;
-            if (i < size() && i != min(i, i + 1)) {
-                i++;
+        while (leftIndex(index) <= size()) {
+            int i = leftIndex(index);
+            if (i < size() && i != min(i, rightIndex(index))) {
+                i = rightIndex(index);
             }
             if (min(i, index) == index) {
                 break;
@@ -152,7 +152,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     @Override
     public T peek() {
-        return contents[1].myItem;
+        return contents[1].item();
     }
 
     /**
@@ -166,7 +166,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     @Override
     public T removeMin() {
-        T item = contents[1].myItem;
+        T item = contents[1].item();
         swap(1, size);
         contents[size] = null;
         size--;
@@ -193,9 +193,10 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     @Override
     public void changePriority(T item, double priority) {
-        for (Node n: contents) {
-            if (n.equals(item)) {
-                n.myPriority = priority;
+        for (int i = 1; i <= size(); i++) {
+            if (contents[i].item().equals(item)) {
+                contents[i].myPriority = priority;
+                return;
             }
         }
     }
