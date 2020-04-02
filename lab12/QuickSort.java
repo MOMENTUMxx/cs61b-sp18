@@ -47,13 +47,69 @@ public class QuickSort {
     private static <Item extends Comparable> void partition(
             Queue<Item> unsorted, Item pivot,
             Queue<Item> less, Queue<Item> equal, Queue<Item> greater) {
-        // Your code here!
+        for (Item i: unsorted) {
+            if (i.compareTo(pivot) > 0) {
+                greater.enqueue(i);
+            } else if (i.compareTo(pivot) < 0) {
+                less.enqueue(i);
+            } else {
+                equal.enqueue(i);
+            }
+        }
     }
 
     /** Returns a Queue that contains the given items sorted from least to greatest. */
     public static <Item extends Comparable> Queue<Item> quickSort(
             Queue<Item> items) {
-        // Your code here!
-        return items;
+        if (items.size() <= 1) {
+            return items;
+        }
+        Queue<Item> less = new Queue<>();
+        Queue<Item> greater = new Queue<>();
+        Queue<Item> equal = new Queue<>();
+        Item pivot = getRandomItem(items);
+        partition(items, pivot, less, equal, greater);
+        Queue<Item> q1 = quickSort(less);
+        Queue<Item> q2 = equal;
+        Queue<Item> q3 = quickSort(greater);
+        return catenate(q1, catenate(q2, q3));
+    }
+
+    public static void main(String[] args) {
+        Queue<String> alphabet = new Queue<>();
+        alphabet.enqueue("q");
+        alphabet.enqueue("w");
+        alphabet.enqueue("e");
+        alphabet.enqueue("r");
+        alphabet.enqueue("t");
+        alphabet.enqueue("j");
+        alphabet.enqueue("y");
+        alphabet.enqueue("u");
+        alphabet.enqueue("i");
+        alphabet.enqueue("o");
+        alphabet.enqueue("o");
+        alphabet.enqueue("o");
+        alphabet.enqueue("p");
+        alphabet.enqueue("a");
+        alphabet.enqueue("s");
+        alphabet.enqueue("d");
+        alphabet.enqueue("j");
+        alphabet.enqueue("f");
+        alphabet.enqueue("g");
+        alphabet.enqueue("h");
+        alphabet.enqueue("j");
+        alphabet.enqueue("k");
+        alphabet.enqueue("l");
+        alphabet.enqueue("z");
+        alphabet.enqueue("x");
+        alphabet.enqueue("c");
+        alphabet.enqueue("j");
+        alphabet.enqueue("v");
+        alphabet.enqueue("b");
+        alphabet.enqueue("n");
+        alphabet.enqueue("m");
+        Queue<String> newAlphabet = quickSort(alphabet);
+        System.out.println(alphabet);
+        System.out.println(newAlphabet);
     }
 }
