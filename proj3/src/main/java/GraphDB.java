@@ -198,12 +198,7 @@ public class GraphDB {
      * @return The longitude of the vertex.
      */
     double lon(long v) {
-        for (Map.Entry<Long, Node> entry: nodes.entrySet()) {
-            if (entry.getKey() == v) {
-                return entry.getValue().lon;
-            }
-        }
-        return 0;
+        return nodes.get(v).lon;
     }
 
     /**
@@ -212,12 +207,7 @@ public class GraphDB {
      * @return The latitude of the vertex.
      */
     double lat(long v) {
-        for (Map.Entry<Long, Node> entry: nodes.entrySet()) {
-            if (entry.getKey() == v) {
-                return entry.getValue().lat;
-            }
-        }
-        return 0;
+        return nodes.get(v).lat;
     }
 
     void addNode(Node n) {
