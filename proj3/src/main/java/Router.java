@@ -1,5 +1,10 @@
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Comparator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,7 +30,49 @@ public class Router {
      */
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
-        return null; // FIXME
+
+        long startNode = g.closest(stlon, stlat);
+        long endNode = g.closest(destlon, destlat);
+        List<Long> movePath = new LinkedList<>();
+
+        class TrackNode {
+            long id;
+            TrackNode parent;
+            double moveDistance;
+            Double priority;
+            TrackNode(long id, TrackNode parent) {
+                this.id = id;
+                this.moveDistance = parent == null ? 0 : parent.moveDistance
+                        + g.distance(id, parent.id);
+                this.priority = this.moveDistance + g.distance(id, endNode);
+                this.parent = parent;
+            }
+        }
+
+        class NodeComparator implements Comparator<TrackNode> {
+            @Override
+            public int compare(TrackNode first, TrackNode second) {
+                return Double.compare(first.priority, second.priority);
+            }
+        }
+
+        PriorityQueue<TrackNode> pq = new PriorityQueue<>(new NodeComparator());
+        TrackNode currentNode = new TrackNode(startNode, null);
+        Set<Long> marked = new HashSet<>();
+        while (!(currentNode.id == endNode)) {
+            for (long nextNode: g.adjacent(currentNode.id)) {
+                if (currentNode.parent == null || !(nextNode == currentNode.parent.id)
+                        && !marked.contains(nextNode)) {
+                    pq.add(new TrackNode(nextNode, currentNode));
+                }
+            }
+            currentNode = pq.poll();
+            marked.add(currentNode.id); //重要！！！将考虑过的节点做标记，这个节点已经是最短路径，不再重复计算
+        }
+        for (TrackNode n = currentNode; n != null; n = n.parent) {
+            movePath.add(0, n.id);
+        }
+        return movePath;
     }
 
     /**

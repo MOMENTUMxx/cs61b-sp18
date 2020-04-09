@@ -6,7 +6,14 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
+import java.util.Map;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * Graph for storing all of the intersection (vertex) and road (edge) information.
@@ -20,6 +27,37 @@ import java.util.ArrayList;
 public class GraphDB {
     /** Your instance variables for storing the graph. You should consider
      * creating helper classes, e.g. Node, Edge, etc. */
+    static class Node {
+        long id;
+        double lon;
+        double lat;
+        Map<String, String> extraInfo;
+
+        Node(long id, double lat, double lon) {
+            this.id = id;
+            this.lat = lat;
+            this.lon = lon;
+            extraInfo = new HashMap<>();
+        }
+    }
+
+    static class Edge {
+        long id;
+        boolean flag;
+        List<Long> intersections; //用来表示这条边上有哪些节点
+        Map<String, String> extraInfo;
+
+        Edge(long id) {
+            this.id = id;
+            flag = false;
+            intersections = new ArrayList<>();
+            extraInfo = new HashMap<>();
+        }
+    }
+
+    //不能用static修饰因为static修饰的变量优先于对象存在，被所有对象所共享！
+    private Map<Long, Set<Long>> adj = new LinkedHashMap<>(); //记录连接关系
+    private Map<Long, Node> nodes = new LinkedHashMap<>(); //所有的节点
 
     /**
      * Example constructor shows how to create and start an XML parser.
@@ -57,7 +95,13 @@ public class GraphDB {
      *  we can reasonably assume this since typically roads are connected.
      */
     private void clean() {
-        // TODO: Your code here.
+        Set<Long> toRemove = new HashSet<>();
+        for (long id: nodes.keySet()) {
+            if (!adj.containsKey(id)) {
+                toRemove.add(id); //迭代过程中删除元素会产生concurrentmodificationexception异常，所以用集合记录，稍后一并删除
+            }
+        }
+        removeNode(toRemove);
     }
 
     /**
@@ -66,7 +110,7 @@ public class GraphDB {
      */
     Iterable<Long> vertices() {
         //YOUR CODE HERE, this currently returns only an empty list.
-        return new ArrayList<Long>();
+        return new ArrayList<>(nodes.keySet());
     }
 
     /**
@@ -75,7 +119,7 @@ public class GraphDB {
      * @return An iterable of the ids of the neighbors of v.
      */
     Iterable<Long> adjacent(long v) {
-        return null;
+        return adj.get(v);
     }
 
     /**
@@ -136,7 +180,16 @@ public class GraphDB {
      * @return The id of the node in the graph closest to the target.
      */
     long closest(double lon, double lat) {
-        return 0;
+        double minDistance = Double.MAX_VALUE;
+        long toReturn = 0;
+        for (Map.Entry<Long, Node> entry: nodes.entrySet()) {
+            double currentDistance = distance(lon, lat, entry.getValue().lon, entry.getValue().lat);
+            if (currentDistance < minDistance) {
+                minDistance = currentDistance;
+                toReturn = entry.getKey();
+            }
+        }
+        return toReturn;
     }
 
     /**
@@ -145,6 +198,11 @@ public class GraphDB {
      * @return The longitude of the vertex.
      */
     double lon(long v) {
+        for (Map.Entry<Long, Node> entry: nodes.entrySet()) {
+            if (entry.getKey() == v) {
+                return entry.getValue().lon;
+            }
+        }
         return 0;
     }
 
@@ -154,6 +212,40 @@ public class GraphDB {
      * @return The latitude of the vertex.
      */
     double lat(long v) {
+        for (Map.Entry<Long, Node> entry: nodes.entrySet()) {
+            if (entry.getKey() == v) {
+                return entry.getValue().lat;
+            }
+        }
         return 0;
+    }
+
+    void addNode(Node n) {
+        nodes.put(n.id, n);
+    }
+
+    void removeNode(Set<Long> toRemove) {
+        for (long id: toRemove) {
+            nodes.remove(id);
+        }
+    }
+
+    //添加一条边，两个节点彼此相连即为边
+    void addEdge(long v, long w) {
+        if (!adj.containsKey(v)) {
+            adj.put(v, new HashSet<>());
+        }
+        adj.get(v).add(w);
+        if (!adj.containsKey(w)) {
+            adj.put(w, new HashSet<>());
+        }
+        adj.get(w).add(v);
+    }
+
+    //添加一条合法的路径，相邻节点之间都用边连起来
+    void addWay(Edge e) {
+        for (int i = 0; i < e.intersections.size() - 1; i++) {
+            addEdge(e.intersections.get(i), e.intersections.get(i + 1));
+        }
     }
 }
