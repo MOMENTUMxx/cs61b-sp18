@@ -58,6 +58,7 @@ public class GraphDB {
     //不能用static修饰因为static修饰的变量优先于对象存在，被所有对象所共享！
     private Map<Long, Set<Long>> adj = new LinkedHashMap<>(); //记录连接关系
     private Map<Long, Node> nodes = new LinkedHashMap<>(); //所有的节点
+    Map<Long, Edge> edges = new LinkedHashMap<>(); //所有的路
 
     /**
      * Example constructor shows how to create and start an XML parser.
@@ -237,5 +238,6 @@ public class GraphDB {
         for (int i = 0; i < e.intersections.size() - 1; i++) {
             addEdge(e.intersections.get(i), e.intersections.get(i + 1));
         }
+        edges.put(e.id, e);
     }
 }

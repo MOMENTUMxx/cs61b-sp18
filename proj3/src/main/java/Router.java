@@ -30,11 +30,12 @@ public class Router {
      */
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
-
+        //获取最近的节点
         long startNode = g.closest(stlon, stlat);
         long endNode = g.closest(destlon, destlat);
         List<Long> movePath = new LinkedList<>();
 
+        //建立TrackNode类，追踪每个节点的父节点，便于寻找最短路径
         class TrackNode {
             long id;
             TrackNode parent;
@@ -44,11 +45,12 @@ public class Router {
                 this.id = id;
                 this.moveDistance = parent == null ? 0 : parent.moveDistance
                         + g.distance(id, parent.id);
-                this.priority = this.moveDistance + g.distance(id, endNode);
+                this.priority = this.moveDistance + g.distance(id, endNode); //A*
                 this.parent = parent;
             }
         }
 
+        //最小优先队列所用的比较器
         class NodeComparator implements Comparator<TrackNode> {
             @Override
             public int compare(TrackNode first, TrackNode second) {
@@ -57,8 +59,10 @@ public class Router {
         }
 
         PriorityQueue<TrackNode> pq = new PriorityQueue<>(new NodeComparator());
+        //起始节点，其父节点为空
         TrackNode currentNode = new TrackNode(startNode, null);
         Set<Long> marked = new HashSet<>();
+        //Java中实现A*算法不能用递归
         while (!(currentNode.id == endNode)) {
             for (long nextNode: g.adjacent(currentNode.id)) {
                 if (currentNode.parent == null || !(nextNode == currentNode.parent.id)
@@ -76,6 +80,56 @@ public class Router {
     }
 
     /**
+     * 辅助函数，获取当前节点和下一个节点所在的路径
+     * @param num 节点的序号
+     */
+    private static String getWay(GraphDB g, List<Long> route, int num) {
+        String newWay = null;
+        for (GraphDB.Edge e: g.edges.values()) {
+            if (e.intersections.contains(route.get(num))
+                    && e.intersections.contains(route.get(num + 1))) {
+                newWay = e.extraInfo.getOrDefault("name", "");
+                break;
+            }
+        }
+        return newWay;
+    }
+
+    /**
+     * 辅助函数，更新方向
+     * @param angle 两段路径的方位角之差，不能大于180度
+     */
+    private static int updateDirection(double angle) {
+        int currentDirection;
+        if (angle >= -15 && angle <= 15) {
+            currentDirection = NavigationDirection.STRAIGHT;
+        } else if (angle >= -30 && angle < -15) {
+            currentDirection = NavigationDirection.SLIGHT_LEFT;
+        } else if (angle > 15 && angle <= 30) {
+            currentDirection = NavigationDirection.SLIGHT_RIGHT;
+        } else if (angle >= -100 && angle < -30) {
+            currentDirection = NavigationDirection.LEFT;
+        } else if (angle > 30 && angle <= 100) {
+            currentDirection = NavigationDirection.RIGHT;
+        } else if (angle < -100) {
+            currentDirection = NavigationDirection.SHARP_LEFT;
+        } else {
+            currentDirection = NavigationDirection.SHARP_RIGHT;
+        }
+        return currentDirection;
+    }
+
+    /**
+     * 更新NavigationDirection对象的各个参数
+     */
+    private static void setNavigationDirection(NavigationDirection n,
+                                               String way, double distance, int direction) {
+        n.way = way;
+        n.distance = distance;
+        n.direction = direction;
+    }
+
+    /**
      * Create the list of directions corresponding to a route on the graph.
      * @param g The graph to use.
      * @param route The route to translate into directions. Each element
@@ -84,7 +138,41 @@ public class Router {
      * route.
      */
     public static List<NavigationDirection> routeDirections(GraphDB g, List<Long> route) {
-        return null; // FIXME
+        double distance = g.distance(route.get(0), route.get(1)); //单独考虑起点
+        int direction = NavigationDirection.START; //起点的方向为START(0)
+        int newDirection; //沿最短路径更新方向
+        String way = getWay(g, route, 0); //获取起点所在路段的名称
+        List<NavigationDirection> toReturn = new LinkedList<>();
+
+        for (int i = 1; i < route.size() - 1; i++) {
+            String newWay = getWay(g, route, i);
+            double prevBearing = g.bearing(route.get(i - 1), route.get(i)); //前一个位置的方位角
+            double currBearing = g.bearing(route.get(i), route.get(i + 1)); //当前位置的方位角
+            double angle = currBearing - prevBearing; //差值作为判断方向更新的依据
+            //角度不能超过180
+            if (Math.abs(angle) > 180) {
+                prevBearing = g.bearing(route.get(i), route.get(i - 1));
+                currBearing = g.bearing(route.get(i + 1), route.get(i));
+            }
+            angle = currBearing - prevBearing;
+            newDirection = updateDirection(angle);
+            //如果进入不同的路段，则创建并添加一个NavigationDirection对象，并更新其参数
+            if (!newWay.equals(way)) {
+                NavigationDirection n = new NavigationDirection();
+                setNavigationDirection(n, way, distance, direction);
+                toReturn.add(n);
+                distance = 0.0;
+                way = newWay;
+                direction = newDirection;
+            }
+            double newDistance = g.distance(route.get(i), route.get(i + 1));
+            distance += newDistance;
+        }
+        //单独考虑终点
+        NavigationDirection n = new NavigationDirection();
+        setNavigationDirection(n, way, distance, direction);
+        toReturn.add(n);
+        return toReturn;
     }
 
 
