@@ -1,3 +1,6 @@
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Class with 2 ways of doing Counting sort, one naive way and one "better" way
  *
@@ -66,7 +69,83 @@ public class CountingSort {
      * @param arr int array that will be sorted
      */
     public static int[] betterCountingSort(int[] arr) {
-        // TODO make counting sort work with arrays containing negative numbers.
-        return null;
+        int[] sorted = new int[arr.length];
+
+        int min = Integer.MAX_VALUE;
+        for (int i: arr) {
+            min = Math.min(min, i);
+        }
+
+        int max = Integer.MIN_VALUE;
+        for (int i: arr) {
+            max = Math.max(max, i);
+        }
+
+        if (min >= 0) {
+            int[] counts = new int[max + 1];
+            for (int i : arr) {
+                counts[i]++;
+            }
+
+            int[] starts = new int[max + 1];
+            int pos = 0;
+            for (int i = 0; i < starts.length; i += 1) {
+                starts[i] = pos;
+                pos += counts[i];
+            }
+
+            for (int item : arr) {
+                int place = starts[item];
+                sorted[place] = item;
+                starts[item] += 1;
+            }
+        }
+
+        if (max <= 0) {
+            Map<Integer, Integer> counts = new HashMap<>(Math.abs(min) + 1);
+            for (int i = min; i <= 0; i++) {
+                counts.put(i, 0);
+            }
+            for (int i: arr) {
+                counts.put(i, counts.get(i) + 1);
+            }
+
+            Map<Integer, Integer> starts = new HashMap<>(Math.abs(min) + 1);
+            int pos = 0;
+            for (int i = min; i <= 0; i++) {
+                starts.put(i, pos);
+                pos += counts.get(i);
+            }
+
+            for (int item: arr) {
+                int place = starts.get(item);
+                sorted[place] = item;
+                starts.put(item, starts.get(item) + 1);
+            }
+        }
+
+        if (min < 0 && max > 0) {
+            Map<Integer, Integer> counts = new HashMap<>(Math.abs(min) + max + 1);
+            for (int i = min; i <= max; i++) {
+                counts.put(i, 0);
+            }
+            for (int i: arr) {
+                counts.put(i, counts.get(i) + 1);
+            }
+
+            Map<Integer, Integer> starts = new HashMap<>(Math.abs(min) + max + 1);
+            int pos = 0;
+            for (int i = min; i <= max; i++) {
+                starts.put(i, pos);
+                pos += counts.get(i);
+            }
+
+            for (int item: arr) {
+                int place = starts.get(item);
+                sorted[place] = item;
+                starts.put(item, starts.get(item) + 1);
+            }
+        }
+        return sorted;
     }
 }
