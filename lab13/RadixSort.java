@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /**
  * Class for doing Radix sort
  *
@@ -16,6 +18,10 @@ public class RadixSort {
      * @return String[] the sorted array
      */
     public static String[] sort(String[] asciis) {
+        if (asciis.length == 0) {
+            return asciis;
+        }
+
         int maxLength = Integer.MIN_VALUE;
         for (String ascii: asciis) {
             maxLength = Math.max(maxLength, ascii.length());
