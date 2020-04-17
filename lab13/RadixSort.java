@@ -5,6 +5,7 @@
  *
  */
 public class RadixSort {
+    public static final int RADIX = 256;
     /**
      * Does LSD radix sort on the passed in array with the following restrictions:
      * The array can only have ASCII Strings (sequence of 1 byte characters)
@@ -15,20 +16,23 @@ public class RadixSort {
      *
      * @return String[] the sorted array
      */
-    private static int RADIX = 256;
-
     public static String[] sort(String[] asciis) {
-        int strLength = 0;
-        for (String str : asciis) {
-            strLength = strLength < str.length() ? str.length() : strLength;
+        if (asciis.length == 0) {
+            return asciis;
+        }
+
+        int maxLength = 0;
+        for (String s: asciis) {
+            maxLength = Math.max(maxLength, s.length());
         }
 
         String[] sorted = asciis.clone();
-        for (int i = strLength - 1; i >= 0; i -= 1) {
+        for (int i = maxLength - 1; i >= 0; i--) {
             sortHelperLSD(sorted, i);
         }
         return sorted;
     }
+
 
     /**
      * LSD helper method that performs a destructive counting sort the array of
@@ -39,30 +43,30 @@ public class RadixSort {
     private static void sortHelperLSD(String[] asciis, int index) {
         // Optional LSD helper method for required LSD radix sort
         int[] count = new int[RADIX];
-        for (String str : asciis) {
-            if (str.length() < index + 1) {
+        for (String s: asciis) {
+            if (s.length() < index + 1) {
                 count[0] += 1;
             } else {
-                int position = (int) str.charAt(index);
-                count[position] += 1;
+                int pos = s.charAt(index);
+                count[pos] += 1;
             }
         }
 
         int[] start = new int[RADIX];
-        int position = 0;
-        for (int i = 0; i < start.length; i += 1) {
-            start[i] = position;
-            position += count[i];
+        int pos = 0;
+        for (int i = 0; i < start.length; i++) {
+            start[i] = pos;
+            pos += count[i];
         }
 
-
         String[] arrayBackup = asciis.clone();
-        for (String str : arrayBackup) {
+        for (String s: arrayBackup) {
             int item = 0;
-            if (str.length() >= index + 1) {
-                item = (int) str.charAt(index);
+            if (s.length() >= index + 1) {
+                item = s.charAt(index);
             }
-            asciis[start[item]] = str;
+            int place = start[item];
+            asciis[place] = s;
             start[item] += 1;
         }
     }

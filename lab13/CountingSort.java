@@ -66,16 +66,19 @@ public class CountingSort {
      * @param arr int array that will be sorted
      */
     public static int[] betterCountingSort(int[] arr) {
-        //find max
+        if (arr.length == 0) {
+            return arr;
+        }
+
         int max = Integer.MIN_VALUE;
         int negativeNum = 0;
-        for (int i : arr) {
-            max = max > Math.abs(i) ? max : Math.abs(i);
+        for (int i: arr) {
+            max = Math.max(max, Math.abs(i));
         }
 
         int[] countPositive = new int[max + 1];
         int[] countNegative = new int[max + 1];
-        for (int i : arr) {
+        for (int i: arr) {
             if (i >= 0) {
                 countPositive[i] += 1;
             } else {
@@ -87,14 +90,14 @@ public class CountingSort {
         int[] sorted = new int[arr.length];
 
         int positiveStartIndex = negativeNum;
-        for (int i = 0; i < countNegative.length; i += 1) {
-            for (int j = 0; j < countNegative[i]; j += 1, negativeNum -= 1) {
+        for (int i = 0; i < countNegative.length; i++) {
+            for (int j = 0; j < countNegative[i]; j++, negativeNum--) {
                 sorted[negativeNum - 1] = -i;
             }
         }
 
-        for (int i = 0; i < countPositive.length; i += 1) {
-            for (int j = 0; j < countPositive[i]; j += 1, positiveStartIndex += 1) {
+        for (int i = 0; i < countPositive.length; i++) {
+            for (int j = 0; j < countPositive[i]; j++, positiveStartIndex++) {
                 sorted[positiveStartIndex] = i;
             }
         }
