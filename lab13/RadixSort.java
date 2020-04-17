@@ -32,7 +32,7 @@ public class RadixSort {
             String ascii = asciis[i];
             StringBuilder asciiBuilder = new StringBuilder(ascii);
             while (asciiBuilder.length() < maxLength) {
-                asciiBuilder.append(" ");
+                asciiBuilder.append("_");
             }
             ascii = asciiBuilder.toString();
             strings[i] = ascii;
@@ -48,7 +48,7 @@ public class RadixSort {
     private static String[] originalString(String[] sorted) {
         String[] toReturn = new String[sorted.length];
         for (int i = 0; i < sorted.length; i++) {
-            String s = sorted[i].replaceAll(" ", "");
+            String s = sorted[i].replaceAll("_", "");
             toReturn[i] = s;
         }
         return toReturn;
