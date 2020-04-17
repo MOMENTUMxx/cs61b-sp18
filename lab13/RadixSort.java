@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 /**
  * Class for doing Radix sort
  *
@@ -7,6 +5,7 @@ import java.util.Arrays;
  *
  */
 public class RadixSort {
+    public static final int RADIX = 256;
     /**
      * Does LSD radix sort on the passed in array with the following restrictions:
      * The array can only have ASCII Strings (sequence of 1 byte characters)
@@ -18,41 +17,18 @@ public class RadixSort {
      * @return String[] the sorted array
      */
     public static String[] sort(String[] asciis) {
-        if (asciis.length == 0) {
-            return asciis;
+        int maxLength = 0;
+        for (String s: asciis) {
+            maxLength = Math.max(maxLength, s.length());
         }
 
-        int maxLength = Integer.MIN_VALUE;
-        for (String ascii: asciis) {
-            maxLength = Math.max(maxLength, ascii.length());
+        String[] sorted = asciis.clone();
+        for (int i = maxLength - 1; i >= 0; i--) {
+            sortHelperLSD(sorted, i);
         }
-
-        String[] strings = new String[asciis.length];
-        for (int i = 0; i < asciis.length; i++) {
-            String ascii = asciis[i];
-            StringBuilder asciiBuilder = new StringBuilder(ascii);
-            while (asciiBuilder.length() < maxLength) {
-                asciiBuilder.append("_");
-            }
-            ascii = asciiBuilder.toString();
-            strings[i] = ascii;
-        }
-
-        String[] sorted = sortHelperLSD(strings, maxLength - 1);
-        for (int i = maxLength - 2; i >= 0; i--) {
-            sorted = sortHelperLSD(sorted, i);
-        }
-        return originalString(sorted);
+        return sorted;
     }
 
-    private static String[] originalString(String[] sorted) {
-        String[] toReturn = new String[sorted.length];
-        for (int i = 0; i < sorted.length; i++) {
-            String s = sorted[i].replaceAll("_", "");
-            toReturn[i] = s;
-        }
-        return toReturn;
-    }
 
     /**
      * LSD helper method that performs a destructive counting sort the array of
@@ -60,33 +36,34 @@ public class RadixSort {
      * @param asciis Input array of Strings
      * @param index The position to sort the Strings on.
      */
-    private static String[] sortHelperLSD(String[] asciis, int index) {
+    private static void sortHelperLSD(String[] asciis, int index) {
         // Optional LSD helper method for required LSD radix sort
-        int max = Integer.MIN_VALUE;
+        int[] count = new int[RADIX];
         for (String s: asciis) {
-            max = Math.max(max, s.charAt(index));
+            if (s.length() < index + 1) {
+                count[0] += 1;
+            } else {
+                int pos = s.charAt(index);
+                count[pos] += 1;
+            }
         }
 
-        int[] counts = new int[max + 1];
-        for (String ascii: asciis) {
-            counts[ascii.charAt(index)]++;
-        }
-
-        int[] starts = new int[max + 1];
+        int[] start = new int[RADIX];
         int pos = 0;
-        for (int i = 0; i < starts.length; i += 1) {
-            starts[i] = pos;
-            pos += counts[i];
+        for (int i = 0; i < start.length; i++) {
+            start[i] = pos;
+            pos += count[i];
         }
 
-        String[] sorted = new String[asciis.length];
-        for (String ascii : asciis) {
-            int item = ascii.charAt(index);
-            int place = starts[item];
-            sorted[place] = ascii;
-            starts[item] += 1;
+        for (String s: asciis) {
+            int item = 0;
+            if (s.length() >= index + 1) {
+                item = s.charAt(index);
+            }
+            int place = start[item];
+            asciis[place] = s;
+            start[item] += 1;
         }
-        return sorted;
     }
 
     /**
