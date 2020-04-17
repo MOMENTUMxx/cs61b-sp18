@@ -44,6 +44,7 @@ public class RadixSort {
         // Optional LSD helper method for required LSD radix sort
         int[] count = new int[RADIX];
         for (String s: asciis) {
+            //若字符串的长度不够，则将该位看作０
             if (s.length() < index + 1) {
                 count[0] += 1;
             } else {
@@ -59,6 +60,7 @@ public class RadixSort {
             pos += count[i];
         }
 
+        //不能在遍历asciis的同时对其中的内容进行修改
         String[] arrayBackup = asciis.clone();
         for (String s: arrayBackup) {
             int item = 0;
