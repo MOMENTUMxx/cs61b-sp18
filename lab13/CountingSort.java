@@ -66,19 +66,16 @@ public class CountingSort {
      * @param arr int array that will be sorted
      */
     public static int[] betterCountingSort(int[] arr) {
-        if (arr.length == 0) {
-            return arr;
-        }
-
+        //find max
         int max = Integer.MIN_VALUE;
         int negativeNum = 0;
-        for (int i: arr) {
-            max = Math.max(max, Math.abs(i));
+        for (int i : arr) {
+            max = max > Math.abs(i) ? max : Math.abs(i);
         }
 
         int[] countPositive = new int[max + 1];
         int[] countNegative = new int[max + 1];
-        for (int i: arr) {
+        for (int i : arr) {
             if (i >= 0) {
                 countPositive[i] += 1;
             } else {
@@ -87,34 +84,18 @@ public class CountingSort {
             }
         }
 
-        int positiveStartIndex = negativeNum;
-
-        int[] startsPositive = new int[max + 1];
-        int posPositive = positiveStartIndex;
-        for (int i = 0; i < startsPositive.length; i++) {
-            startsPositive[i] = posPositive;
-            posPositive += countPositive[i];
-        }
-
-        int[] startsNegative = new int[max];
-        int posNegative = 0;
-        for (int j = -startsNegative.length + 1; j < 0; j++) {
-            startsNegative[-j] = posNegative;
-            posNegative += countNegative[-j];
-        }
-
         int[] sorted = new int[arr.length];
 
-        for (int i = 0; i < sorted.length; i++) {
-            int item = arr[i];
-            if (item < 0) {
-                int place = startsNegative[-item];
-                sorted[place] = item;
-                startsNegative[-item] += 1;
-            } else {
-                int place = startsPositive[item];
-                sorted[place] = item;
-                startsPositive[item] += 1;
+        int positiveStartIndex = negativeNum;
+        for (int i = 0; i < countNegative.length; i += 1) {
+            for (int j = 0; j < countNegative[i]; j += 1, negativeNum -= 1) {
+                sorted[negativeNum - 1] = -i;
+            }
+        }
+
+        for (int i = 0; i < countPositive.length; i += 1) {
+            for (int j = 0; j < countPositive[i]; j += 1, positiveStartIndex += 1) {
+                sorted[positiveStartIndex] = i;
             }
         }
         return sorted;
