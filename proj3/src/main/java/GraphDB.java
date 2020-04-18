@@ -56,8 +56,9 @@ public class GraphDB {
     }
 
     //不能用static修饰因为static修饰的变量优先于对象存在，被所有对象所共享！
-    private Map<Long, Set<Long>> adj = new LinkedHashMap<>(); //记录连接关系
-    private Map<Long, Node> nodes = new LinkedHashMap<>(); //所有的节点
+    Map<Long, Set<Long>> adj = new LinkedHashMap<>(); //记录连接关系
+    Map<Long, Node> nodes = new LinkedHashMap<>(); //所有的节点
+    Set<Node> allNodes = new HashSet<>(); //所有的名字
     Map<Long, Edge> edges = new LinkedHashMap<>(); //所有的路
 
     /**
@@ -96,6 +97,11 @@ public class GraphDB {
      *  we can reasonably assume this since typically roads are connected.
      */
     private void clean() {
+        for (Node n: nodes.values()) {
+            if (n.extraInfo.containsKey("name")) {
+                allNodes.add(n);
+            }
+        }
         Set<Long> toRemove = new HashSet<>();
         for (long id: nodes.keySet()) {
             if (!adj.containsKey(id)) {

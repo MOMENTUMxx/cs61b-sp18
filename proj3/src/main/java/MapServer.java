@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.HashSet;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.IOException;
@@ -29,6 +30,8 @@ import static spark.Spark.*;
  * @author Alan Yao, Josh Hug
  */
 public class MapServer {
+    private static MyTrieSet trieSet;
+    private static Map<String, List<GraphDB.Node>> cleanedNameToNodes;
     /**
      * The root upper left/lower right longitudes and latitudes represent the bounding box of
      * the root tile, as the images in the img/ folder are scraped.
@@ -285,6 +288,35 @@ public class MapServer {
      * cleaned <code>prefix</code>.
      */
     public static List<String> getLocationsByPrefix(String prefix) {
+        try {
+            trieSet = new MyTrieSet();
+            cleanedNameToNodes = new HashMap<>();
+            List<GraphDB.Node> nodesList;
+            for (GraphDB.Node node: graph.allNodes) {
+                if (node.extraInfo.containsKey("name")) {
+                    String cleanName = GraphDB.cleanString(node.extraInfo.get("name"));
+                    trieSet.add(cleanName);
+                    if (!cleanedNameToNodes.containsKey(cleanName)) {
+                        cleanedNameToNodes.put(cleanName, new LinkedList<>());
+                    }
+                    nodesList = cleanedNameToNodes.get(cleanName);
+                    nodesList.add(node);
+                    cleanedNameToNodes.put(cleanName, nodesList);
+                }
+            }
+            String cleanPrefix = GraphDB.cleanString(prefix);
+            List<String> matchedNames = trieSet.keysWithPrefix(cleanPrefix);
+            Set<String> locationSet = new HashSet<>();
+
+            for (String name: matchedNames) {
+                for (GraphDB.Node node: cleanedNameToNodes.get(name)) {
+                    locationSet.add(node.extraInfo.get("name"));
+                }
+            }
+            return new LinkedList<>(locationSet);
+        } catch (NullPointerException e) {
+//            System.out.println(e.toString());
+        }
         return new LinkedList<>();
     }
 
@@ -301,7 +333,21 @@ public class MapServer {
      * "id" : Number, The id of the node. <br>
      */
     public static List<Map<String, Object>> getLocations(String locationName) {
-        return new LinkedList<>();
+        List<Map<String, Object>> locations = new LinkedList<>();
+        String cleanedLocationName = GraphDB.cleanString(locationName);
+
+        if (cleanedNameToNodes.containsKey(cleanedLocationName)) {
+            for (GraphDB.Node node : cleanedNameToNodes.get(cleanedLocationName)) {
+                Map<String, Object> locationInfo = new HashMap<>();
+                locationInfo.put("id", node.id);
+                locationInfo.put("name", node.extraInfo.get("name"));
+                locationInfo.put("lon", node.lon);
+                locationInfo.put("lat", node.lat);
+                locations.add(locationInfo);
+            }
+        }
+
+        return locations;
     }
 
     /**
