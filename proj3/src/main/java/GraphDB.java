@@ -68,14 +68,14 @@ public class GraphDB {
      */
     public GraphDB(String dbPath) {
         try {
-            File inputFile = new File(dbPath);
-            FileInputStream inputStream = new FileInputStream(inputFile);
+            //File inputFile = new File(dbPath);
+            //FileInputStream inputStream = new FileInputStream(inputFile);
             // GZIPInputStream stream = new GZIPInputStream(inputStream);
 
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
             GraphBuildingHandler gbh = new GraphBuildingHandler(this);
-            saxParser.parse(inputStream, gbh);
+            saxParser.parse(Thread.currentThread().getContextClassLoader().getResourceAsStream(dbPath), gbh);
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
