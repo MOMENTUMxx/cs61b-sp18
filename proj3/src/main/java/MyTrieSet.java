@@ -1,3 +1,8 @@
+/*
+ * 该类引用自github上的一位大佬，在此表示感谢！
+ * @source https://github.com/zangsy/cs61b_sp19/blob/master/proj2c/bearmaps/lab9/MyTrieSet.java
+ */
+
 import java.util.Map;
 import java.util.List;
 import java.util.HashMap;

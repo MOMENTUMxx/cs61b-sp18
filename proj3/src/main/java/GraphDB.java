@@ -1,7 +1,5 @@
 import org.xml.sax.SAXException;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -75,6 +73,7 @@ public class GraphDB {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
             GraphBuildingHandler gbh = new GraphBuildingHandler(this);
+            //线上部署之后的形式
             saxParser.parse(Thread.currentThread().getContextClassLoader().getResourceAsStream(dbPath), gbh);
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();

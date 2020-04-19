@@ -3,7 +3,6 @@ import java.awt.Graphics2D;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -53,6 +52,7 @@ public class MapServer {
      * The OSM XML file path. Downloaded from <a href="http://download.bbbike.org/osm/">here</a>
      * using custom region selection.
      **/
+    //线上部署后所有的<../library-sp19/data/>替换为<data/>
     private static final String OSM_DB_PATH = "data/berkeley-2018.osm.xml";
     /**
      * Each raster request to the server will have the following parameters
@@ -86,6 +86,7 @@ public class MapServer {
     /* Define any static variables here. Do not define any instance variables of MapServer. */
 
 
+    //分配端口，默认"4567"
     private static int getHerokuAssignedPort() {
         ProcessBuilder processBuilder = new ProcessBuilder();
         if (processBuilder.environment().get("PORT") != null) {
@@ -99,6 +100,7 @@ public class MapServer {
      * This is for testing purposes, and you may fail tests otherwise.
      **/
     public static void initialize() {
+        //线上部署后的改动
         port(getHerokuAssignedPort());
         graph = new GraphDB(OSM_DB_PATH);
         rasterer = new Rasterer();
@@ -273,6 +275,7 @@ public class MapServer {
         if (tileImg == null) {
             try {
                 //File in = new File(imgPath);
+                //线上部署后的形式
                 tileImg = ImageIO.read(Thread.currentThread().getContextClassLoader().getResource(imgPath));
             } catch (IOException | NullPointerException e) {
                 e.printStackTrace();
@@ -294,6 +297,7 @@ public class MapServer {
      *               punctuation.
      * @return A <code>List</code> of the full names of locations whose cleaned name matches the
      * cleaned <code>prefix</code>.
+     * 此方法借鉴自https://github.com/zangsy/cs61b_sp19/blob/master/proj2c/bearmaps/proj2c/AugmentedStreetMapGraph.java
      */
     public static List<String> getLocationsByPrefix(String prefix) {
         try {
@@ -305,6 +309,7 @@ public class MapServer {
                     String cleanName = GraphDB.cleanString(node.extraInfo.get("name"));
                     trieSet.add(cleanName);
                     if (!cleanedNameToNodes.containsKey(cleanName)) {
+                        //cleanName相同的位置可能有多个
                         cleanedNameToNodes.put(cleanName, new LinkedList<>());
                     }
                     nodesList = cleanedNameToNodes.get(cleanName);
@@ -318,6 +323,7 @@ public class MapServer {
 
             for (String name: matchedNames) {
                 for (GraphDB.Node node: cleanedNameToNodes.get(name)) {
+                    //获取原始的地名（含大写和其他字符）
                     locationSet.add(node.extraInfo.get("name"));
                 }
             }
@@ -339,12 +345,14 @@ public class MapServer {
      * "lon" : Number, The longitude of the node. <br>
      * "name" : String, The actual name of the node. <br>
      * "id" : Number, The id of the node. <br>
+     * 此方法借鉴自https://github.com/zangsy/cs61b_sp19/blob/master/proj2c/bearmaps/proj2c/AugmentedStreetMapGraph.java
      */
     public static List<Map<String, Object>> getLocations(String locationName) {
         List<Map<String, Object>> locations = new LinkedList<>();
         String cleanedLocationName = GraphDB.cleanString(locationName);
 
         if (cleanedNameToNodes.containsKey(cleanedLocationName)) {
+            //cleanName相同的位置可能有多个
             for (GraphDB.Node node : cleanedNameToNodes.get(cleanedLocationName)) {
                 Map<String, Object> locationInfo = new HashMap<>();
                 locationInfo.put("id", node.id);
@@ -354,7 +362,6 @@ public class MapServer {
                 locations.add(locationInfo);
             }
         }
-
         return locations;
     }
 
