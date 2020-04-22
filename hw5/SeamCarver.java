@@ -126,13 +126,17 @@ public class SeamCarver {
     }
 
     private int[] findVerticalSeam(Picture pic) {
-        if (pic.width() <= 1) {
-            throw new IllegalArgumentException();
-        }
         double[][] energy = new double[pic.width()][pic.height()];
         double[][] cost = new double[pic.width()][pic.height()];
         int[][] prevPixel = new int[pic.width()][pic.height()];
         int[] result = new int[pic.height()];
+
+        if (pic.width() == 1) {
+            for (int i = 0; i < pic.height(); i++) {
+                result[i] = 0;
+            }
+            return result;
+        }
 
         for (int i = 0; i < pic.width(); i++) {
             for (int j = 0; j < pic.height(); j++) {
