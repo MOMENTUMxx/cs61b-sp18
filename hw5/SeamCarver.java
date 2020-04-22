@@ -42,6 +42,7 @@ public class SeamCarver {
     }
 
     private int leftOfX(Picture pic, int x) {
+        //左边界向左为右边界
         if (x == 0) {
             return pic.width() - 1;
         }
@@ -49,6 +50,7 @@ public class SeamCarver {
     }
 
     private int rightOfX(Picture pic, int x) {
+        //右边界向右为左边界
         if (x == pic.width() - 1) {
             return 0;
         }
@@ -56,6 +58,7 @@ public class SeamCarver {
     }
 
     private int upOfY(Picture pic, int y) {
+        //上边界向上为下边界
         if (y == 0) {
             return pic.height() - 1;
         }
@@ -63,6 +66,7 @@ public class SeamCarver {
     }
 
     private int downOfY(Picture pic, int y) {
+        //下边界向下为上边界
         if (y == pic.height() - 1) {
             return 0;
         }
@@ -103,6 +107,7 @@ public class SeamCarver {
                 + Math.pow(by(pic, x, y), 2));
     }
 
+    //返回该图片的转置，避免寻找水平和垂直seam时的重复代码
     private Picture transposition(Picture pic) {
         Picture trans = new Picture(pic.height(), pic.width());
 
@@ -128,9 +133,10 @@ public class SeamCarver {
     private int[] findVerticalSeam(Picture pic) {
         double[][] energy = new double[pic.width()][pic.height()];
         double[][] cost = new double[pic.width()][pic.height()];
-        int[][] prevPixel = new int[pic.width()][pic.height()];
+        int[][] prevPixel = new int[pic.width()][pic.height()]; //记录最短路径下每个pixel的前一个pixel
         int[] result = new int[pic.height()];
 
+        //图像宽度仅为１时单独考虑
         if (pic.width() == 1) {
             for (int i = 0; i < pic.height(); i++) {
                 result[i] = 0;
@@ -138,19 +144,21 @@ public class SeamCarver {
             return result;
         }
 
+        //计算energy的矩阵，避免每次重复计算
         for (int i = 0; i < pic.width(); i++) {
             for (int j = 0; j < pic.height(); j++) {
                 energy[i][j] = energy(pic, i, j);
             }
         }
 
+        //第一行最短路径就是energy
         for (int i = 0; i < pic.width(); i++) {
             cost[i][0] = energy[i][0];
         }
 
         for (int j = 1; j < pic.height(); j++) {
             for (int i = 0; i < pic.width(); i++) {
-                if (i == 0) {
+                if (i == 0) { //左边界
                     if (cost[i][j - 1] <= cost[i + 1][j - 1]) {
                         cost[i][j] = cost[i][j - 1] + energy[i][j];
                         prevPixel[i][j] = i;
@@ -158,7 +166,7 @@ public class SeamCarver {
                         cost[i][j] = cost[i + 1][j - 1] + energy[i][j];
                         prevPixel[i][j] = i + 1;
                     }
-                } else if (i == pic.width() - 1) {
+                } else if (i == pic.width() - 1) { //右边界
                     if (cost[i - 1][j - 1] <= cost[i][j - 1]) {
                         cost[i][j] = cost[i - 1][j - 1] + energy[i][j];
                         prevPixel[i][j] = i - 1;
