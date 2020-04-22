@@ -12,7 +12,7 @@ public class SeamCarver {
 
     // current picture
     public Picture picture() {
-        return this.picture;
+        return new Picture(picture);
     }
 
     // width of current picture
@@ -28,18 +28,6 @@ public class SeamCarver {
     private void validate(Picture pic, int x, int y) {
         if (x < 0 || x >= pic.width() || y < 0 || y >= pic.height()) {
             throw new IndexOutOfBoundsException();
-        }
-    }
-
-    private void validate(Picture pic, int[] seam) {
-        if (pic.height() != seam.length) {
-            throw new IllegalArgumentException();
-        }
-
-        for (int i = 1; i < seam.length; i++) {
-            if (Math.abs(seam[i] - seam[i - 1]) > 1) {
-                throw new IllegalArgumentException();
-            }
         }
     }
 
@@ -129,15 +117,18 @@ public class SeamCarver {
 
     // sequence of indices for horizontal seam
     public int[] findHorizontalSeam() {
-        return findSeam(transposition(picture));
+        return findVerticalSeam(transposition(picture));
     }
 
     // sequence of indices for vertical seam
     public int[] findVerticalSeam() {
-        return findSeam(picture);
+        return findVerticalSeam(picture);
     }
 
-    private int[] findSeam(Picture pic) {
+    private int[] findVerticalSeam(Picture pic) {
+        if (pic.width() <= 1) {
+            throw new IllegalArgumentException();
+        }
         double[][] energy = new double[pic.width()][pic.height()];
         double[][] cost = new double[pic.width()][pic.height()];
         int[][] prevPixel = new int[pic.width()][pic.height()];
