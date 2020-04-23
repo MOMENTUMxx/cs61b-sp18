@@ -9,7 +9,7 @@ public class HugLife {
     /** Size of the world. Probably best to keep this under 100 
       *  or so.
      */
-    public static final int WORLD_SIZE = 15;
+    public static final int WORLD_SIZE = 50;
 
     /** Maximum number of cycles to simulate by default. */
     public static final int MAX_CYCLES = 1000;
@@ -17,7 +17,7 @@ public class HugLife {
     /** Time in milliseconds between simulation steps. 
      *  Reduce to make things run faster.
      */
-    public static final int PAUSE_TIME_PER_SIMSTEP = 100;
+    public static final int PAUSE_TIME_PER_SIMSTEP = 10;
 
     /** If true, the HugLifeAnimator class saves an image after every cycle.
      *  After all cycles have finished, or on exit, these images are combined into an animated GIF.
@@ -119,9 +119,9 @@ public class HugLife {
             int y = in.readInt();
             switch (creature) {
                 //Uncomment this when you're ready to test out your clorus class
-                // case "clorus":
-                //     h.addCreature(x, y, new Clorus(1));
-                //     break;
+                 case "clorus":
+                     h.addCreature(x, y, new Clorus(1));
+                     break;
                 case "plip":
                     h.addCreature(x, y, new Plip());
                     break;

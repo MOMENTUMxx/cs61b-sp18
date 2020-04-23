@@ -10,14 +10,14 @@ import huglife.Impassible;
 import huglife.Empty;
 
 /** Tests the plip class   
- *  @authr FIXME
+ *  @author LujieWang
  */
 
 public class TestPlip {
 
     /* Replace with the magic word given in lab.
      * If you are submitting early, just put in "early" */
-    public static final String MAGIC_WORD = "";
+    public static final String MAGIC_WORD = "early";
 
     @Test
     public void testBasics() {
@@ -36,13 +36,17 @@ public class TestPlip {
 
     @Test
     public void testReplicate() {
-
+        Plip p = new Plip(1.5);
+        Plip baby = p.replicate();
+        assertEquals(0.75, baby.energy(), 0.01);
+        assertEquals(0.75, p.energy(), 0.01);
+        assertNotSame(p, baby);
     }
 
-    //@Test
+    @Test
     public void testChoose() {
         Plip p = new Plip(1.2);
-        HashMap<Direction, Occupant> surrounded = new HashMap<Direction, Occupant>();
+        HashMap<Direction, Occupant> surrounded = new HashMap<>();
         surrounded.put(Direction.TOP, new Impassible());
         surrounded.put(Direction.BOTTOM, new Impassible());
         surrounded.put(Direction.LEFT, new Impassible());
@@ -56,6 +60,18 @@ public class TestPlip {
         Action expected = new Action(Action.ActionType.STAY);
 
         assertEquals(expected, actual);
+
+        Plip p1 = new Plip(1.5);
+        HashMap<Direction, Occupant> surrounded1 = new HashMap<>();
+        surrounded1.put(Direction.TOP, new Impassible());
+        surrounded1.put(Direction.BOTTOM, new Impassible());
+        surrounded1.put(Direction.LEFT, new Impassible());
+        surrounded1.put(Direction.RIGHT, new Empty());
+
+        Action actual1 = p1.chooseAction(surrounded1);
+        Action expected1 = new Action(Action.ActionType.REPLICATE, Direction.RIGHT);
+
+        assertEquals(expected1, actual1);
     }
 
     public static void main(String[] args) {
