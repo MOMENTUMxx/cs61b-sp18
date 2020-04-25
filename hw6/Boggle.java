@@ -54,8 +54,14 @@ public class Boggle {
 
     // File path of dictionary file
     static String dictPath;
-    static List<String> answers = new ArrayList<>();
-    static Set<String> answerSet = new HashSet<>();
+    static List<String> answers;
+    static Set<String> answerSet;
+
+    public Boggle() {
+        dictPath = "";
+        answers = new ArrayList<>();
+        answerSet = new HashSet<>();
+    }
 
     /**
      * Solves a Boggle puzzle.
