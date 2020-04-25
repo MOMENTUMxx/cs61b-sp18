@@ -141,101 +141,35 @@ public class Boggle {
 
     private static List<Letter> neighbor(char[][] boardMatrix, int i, int j) {
         List<Letter> toReturn = new ArrayList<>();
-        if (boardMatrix.length == 1 && boardMatrix[0].length == 1) { //矩阵为1*1
-            return toReturn;
-        } else if (boardMatrix.length == 1) { //矩阵为一行
-            if (j == 0) {
-                toReturn.add(new Letter(i, j + 1, boardMatrix[i][j + 1]));
-                return toReturn;
-            } else if (j == boardMatrix[0].length - 1) {
-                toReturn.add(new Letter(i, j - 1, boardMatrix[i][j - 1]));
-                return toReturn;
-            } else if (boardMatrix[0].length > 2) {
-                toReturn.add(new Letter(i, j - 1, boardMatrix[i][j - 1]));
-                toReturn.add(new Letter(i, j + 1, boardMatrix[i][j + 1]));
-                return toReturn;
-            }
-        } else if (boardMatrix[0].length == 1) { //矩阵为一列
-            if (i == 0) {
-                toReturn.add(new Letter(i + 1, j, boardMatrix[i + 1][j]));
-                return toReturn;
-            } else if (i == boardMatrix.length - 1) {
-                toReturn.add(new Letter(i - 1, j, boardMatrix[i - 1][j]));
-                return toReturn;
-            } else if (boardMatrix.length > 2) {
-                toReturn.add(new Letter(i - 1, j, boardMatrix[i - 1][j]));
-                toReturn.add(new Letter(i + 1, j, boardMatrix[i + 1][j]));
-                return toReturn;
-            }
-        } else if (i == 0) { //上边界
-            if (j == 0) { //左上角
-                toReturn.add(new Letter(i, j + 1, boardMatrix[i][j + 1]));
-                toReturn.add(new Letter(i + 1, j, boardMatrix[i + 1][j]));
-                toReturn.add(new Letter(i + 1, j + 1, boardMatrix[i + 1][j + 1]));
-                return toReturn;
-            } else if (j == boardMatrix[0].length - 1) { //右上角
-                toReturn.add(new Letter(i, j - 1, boardMatrix[i][j - 1]));
-                toReturn.add(new Letter(i + 1, j, boardMatrix[i + 1][j]));
-                toReturn.add(new Letter(i + 1, j - 1, boardMatrix[i + 1][j - 1]));
-                return toReturn;
-            } else if (boardMatrix[0].length > 2) {
-                toReturn.add(new Letter(i, j - 1, boardMatrix[i][j - 1]));
-                toReturn.add(new Letter(i, j + 1, boardMatrix[i][j + 1]));
-                toReturn.add(new Letter(i + 1, j, boardMatrix[i + 1][j]));
-                toReturn.add(new Letter(i + 1, j - 1, boardMatrix[i + 1][j - 1]));
-                toReturn.add(new Letter(i + 1, j + 1, boardMatrix[i + 1][j + 1]));
-                return toReturn;
-            }
-        } else if (i == boardMatrix.length - 1) { //下边界
-            if (j == 0) { //左下角
-                toReturn.add(new Letter(i - 1, j, boardMatrix[i - 1][j]));
-                toReturn.add(new Letter(i, j + 1, boardMatrix[i][j + 1]));
-                toReturn.add(new Letter(i - 1, j + 1, boardMatrix[i - 1][j + 1]));
-                return toReturn;
-            } else if (j == boardMatrix[0].length - 1) { //右下角
-                toReturn.add(new Letter(i - 1, j, boardMatrix[i - 1][j]));
-                toReturn.add(new Letter(i, j - 1, boardMatrix[i][j - 1]));
-                toReturn.add(new Letter(i - 1, j - 1, boardMatrix[i - 1][j - 1]));
-                return toReturn;
-            } else if (boardMatrix[0].length > 2) {
-                toReturn.add(new Letter(i, j - 1, boardMatrix[i][j - 1]));
-                toReturn.add(new Letter(i, j + 1, boardMatrix[i][j + 1]));
-                toReturn.add(new Letter(i - 1, j, boardMatrix[i - 1][j]));
-                toReturn.add(new Letter(i - 1, j - 1, boardMatrix[i - 1][j - 1]));
-                toReturn.add(new Letter(i - 1, j + 1, boardMatrix[i - 1][j + 1]));
-                return toReturn;
-            }
-        } else if (j == 0) { //左边界
-            if (boardMatrix.length > 2) {
-                toReturn.add(new Letter(i - 1, j, boardMatrix[i - 1][j]));
-                toReturn.add(new Letter(i + 1, j, boardMatrix[i + 1][j]));
-                toReturn.add(new Letter(i, j + 1, boardMatrix[i][j + 1]));
-                toReturn.add(new Letter(i - 1, j + 1, boardMatrix[i - 1][j + 1]));
-                toReturn.add(new Letter(i + 1, j + 1, boardMatrix[i + 1][j + 1]));
-                return toReturn;
-            }
-        } else if (j == boardMatrix[0].length - 1) { //右边界
-            if (boardMatrix.length > 2) {
-                toReturn.add(new Letter(i - 1, j, boardMatrix[i - 1][j]));
-                toReturn.add(new Letter(i + 1, j, boardMatrix[i + 1][j]));
-                toReturn.add(new Letter(i, j - 1, boardMatrix[i][j - 1]));
-                toReturn.add(new Letter(i - 1, j - 1, boardMatrix[i - 1][j - 1]));
-                toReturn.add(new Letter(i + 1, j - 1, boardMatrix[i + 1][j - 1]));
-                return toReturn;
-            }
-        } else { //一般情况
+        if (inBounds(boardMatrix, i - 1, j)) {
             toReturn.add(new Letter(i - 1, j, boardMatrix[i - 1][j]));
-            toReturn.add(new Letter(i + 1, j, boardMatrix[i + 1][j]));
-            toReturn.add(new Letter(i, j - 1, boardMatrix[i][j - 1]));
-            toReturn.add(new Letter(i, j + 1, boardMatrix[i][j + 1]));
-            toReturn.add(new Letter(i - 1, j - 1, boardMatrix[i - 1][j - 1]));
-            toReturn.add(new Letter(i - 1, j + 1, boardMatrix[i - 1][j + 1]));
-            toReturn.add(new Letter(i + 1, j - 1, boardMatrix[i + 1][j - 1]));
-            toReturn.add(new Letter(i + 1, j + 1, boardMatrix[i + 1][j + 1]));
-            return toReturn;
         }
-
+        if (inBounds(boardMatrix, i + 1, j)) {
+            toReturn.add(new Letter(i + 1, j, boardMatrix[i + 1][j]));
+        }
+        if (inBounds(boardMatrix, i, j - 1)) {
+            toReturn.add(new Letter(i, j - 1, boardMatrix[i][j - 1]));
+        }
+        if (inBounds(boardMatrix, i, j + 1)) {
+            toReturn.add(new Letter(i, j + 1, boardMatrix[i][j + 1]));
+        }
+        if (inBounds(boardMatrix, i - 1, j - 1)) {
+            toReturn.add(new Letter(i - 1, j - 1, boardMatrix[i - 1][j - 1]));
+        }
+        if (inBounds(boardMatrix, i - 1, j + 1)) {
+            toReturn.add(new Letter(i - 1, j + 1, boardMatrix[i - 1][j + 1]));
+        }
+        if (inBounds(boardMatrix, i + 1, j - 1)) {
+            toReturn.add(new Letter(i + 1, j - 1, boardMatrix[i + 1][j - 1]));
+        }
+        if (inBounds(boardMatrix, i + 1, j + 1)) {
+            toReturn.add(new Letter(i + 1, j + 1, boardMatrix[i + 1][j + 1]));
+        }
         return toReturn;
+    }
+
+    private static boolean inBounds(char[][] boardMatrix, int i, int j) {
+        return i >= 0 && i < boardMatrix.length && j >= 0 && j < boardMatrix[0].length;
     }
 
     //将Board转化为二维矩阵
