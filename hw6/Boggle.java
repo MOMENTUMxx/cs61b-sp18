@@ -53,15 +53,9 @@ public class Boggle {
     }
 
     // File path of dictionary file
-    static String dictPath;
+    static String dictPath = "words.txt";
     static List<String> answers;
     static Set<String> answerSet;
-
-    public Boggle() {
-        dictPath = "";
-        answers = new ArrayList<>();
-        answerSet = new HashSet<>();
-    }
 
     /**
      * Solves a Boggle puzzle.
@@ -76,6 +70,8 @@ public class Boggle {
     public static List<String> solve(int k, String boardFilePath) {
         // YOUR CODE HERE
         validate(k, boardFilePath);
+        answers = new ArrayList<>();
+        answerSet = new HashSet<>();
         In inDict = new In(dictPath);
         MyTrieSet trie = new MyTrieSet();
         char[][] boardMatrix = boardToCharArray(boardFilePath);
@@ -236,8 +232,4 @@ public class Boggle {
         in.close();
         return true;
     }
-
-//    public static void main(String[] args) {
-//        System.out.println(solve(7, "exampleBoard.txt"));
-//    }
 }
