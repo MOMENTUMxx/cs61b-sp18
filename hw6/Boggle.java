@@ -43,7 +43,7 @@ public class Boggle {
         }
         @Override
         public int hashCode() {
-            return 31 * row + col;
+            return row + col;
         }
     }
 
