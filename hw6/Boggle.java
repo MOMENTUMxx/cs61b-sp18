@@ -1,16 +1,17 @@
 import edu.princeton.cs.algs4.In;
 
-import java.util.ArrayList;
+import java.util.Stack;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Stack;
+import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.HashSet;
 
 public class Boggle {
 
+    //按长度递减的顺序排序字符串，长度相同时，按字母表顺序排序
     private static class SearchWordComparator implements Comparator<String> {
         @Override
         public int compare(String first, String second) {
@@ -24,15 +25,18 @@ public class Boggle {
         }
     }
 
+    //该类的实例对应Board中的一个字母
     private static class Letter {
-        int row;
-        int col;
-        char value;
+        int row; //在矩阵中的行数
+        int col; //在矩阵中的列数
+        char value; //字母的值
         Letter(int row, int col, char value) {
             this.row = row;
             this.col = col;
             this.value = value;
         }
+
+        //仅当两个字母对象在Board中的位置及值相同时，两个对象才相同
         @Override
         public boolean equals(Object o) {
             if (o == null || o.getClass() != this.getClass()) {
@@ -41,6 +45,7 @@ public class Boggle {
             Letter oLetter = (Letter) o;
             return row == oLetter.row && col == oLetter.col && value == oLetter.value;
         }
+
         @Override
         public int hashCode() {
             return 31 * row + col;
@@ -136,9 +141,9 @@ public class Boggle {
 
     private static List<Letter> neighbor(char[][] boardMatrix, int i, int j) {
         List<Letter> toReturn = new ArrayList<>();
-        if (boardMatrix.length == 1 && boardMatrix[0].length == 1) {
+        if (boardMatrix.length == 1 && boardMatrix[0].length == 1) { //矩阵为1*1
             return toReturn;
-        } else if (boardMatrix.length == 1) {
+        } else if (boardMatrix.length == 1) { //矩阵为一行
             if (j == 0) {
                 toReturn.add(new Letter(i, j + 1, boardMatrix[i][j + 1]));
                 return toReturn;
@@ -150,7 +155,7 @@ public class Boggle {
                 toReturn.add(new Letter(i, j + 1, boardMatrix[i][j + 1]));
                 return toReturn;
             }
-        } else if (boardMatrix[0].length == 1) {
+        } else if (boardMatrix[0].length == 1) { //矩阵为一列
             if (i == 0) {
                 toReturn.add(new Letter(i + 1, j, boardMatrix[i + 1][j]));
                 return toReturn;
@@ -162,13 +167,13 @@ public class Boggle {
                 toReturn.add(new Letter(i + 1, j, boardMatrix[i + 1][j]));
                 return toReturn;
             }
-        } else if (i == 0) {
-            if (j == 0) {
+        } else if (i == 0) { //上边界
+            if (j == 0) { //左上角
                 toReturn.add(new Letter(i, j + 1, boardMatrix[i][j + 1]));
                 toReturn.add(new Letter(i + 1, j, boardMatrix[i + 1][j]));
                 toReturn.add(new Letter(i + 1, j + 1, boardMatrix[i + 1][j + 1]));
                 return toReturn;
-            } else if (j == boardMatrix[0].length - 1) {
+            } else if (j == boardMatrix[0].length - 1) { //右上角
                 toReturn.add(new Letter(i, j - 1, boardMatrix[i][j - 1]));
                 toReturn.add(new Letter(i + 1, j, boardMatrix[i + 1][j]));
                 toReturn.add(new Letter(i + 1, j - 1, boardMatrix[i + 1][j - 1]));
@@ -181,13 +186,13 @@ public class Boggle {
                 toReturn.add(new Letter(i + 1, j + 1, boardMatrix[i + 1][j + 1]));
                 return toReturn;
             }
-        } else if (i == boardMatrix.length - 1) {
-            if (j == 0) {
+        } else if (i == boardMatrix.length - 1) { //下边界
+            if (j == 0) { //左下角
                 toReturn.add(new Letter(i - 1, j, boardMatrix[i - 1][j]));
                 toReturn.add(new Letter(i, j + 1, boardMatrix[i][j + 1]));
                 toReturn.add(new Letter(i - 1, j + 1, boardMatrix[i - 1][j + 1]));
                 return toReturn;
-            } else if (j == boardMatrix[0].length - 1) {
+            } else if (j == boardMatrix[0].length - 1) { //右下角
                 toReturn.add(new Letter(i - 1, j, boardMatrix[i - 1][j]));
                 toReturn.add(new Letter(i, j - 1, boardMatrix[i][j - 1]));
                 toReturn.add(new Letter(i - 1, j - 1, boardMatrix[i - 1][j - 1]));
@@ -200,7 +205,7 @@ public class Boggle {
                 toReturn.add(new Letter(i - 1, j + 1, boardMatrix[i - 1][j + 1]));
                 return toReturn;
             }
-        } else if (j == 0) {
+        } else if (j == 0) { //左边界
             if (boardMatrix.length > 2) {
                 toReturn.add(new Letter(i - 1, j, boardMatrix[i - 1][j]));
                 toReturn.add(new Letter(i + 1, j, boardMatrix[i + 1][j]));
@@ -209,7 +214,7 @@ public class Boggle {
                 toReturn.add(new Letter(i + 1, j + 1, boardMatrix[i + 1][j + 1]));
                 return toReturn;
             }
-        } else if (j == boardMatrix[0].length - 1) {
+        } else if (j == boardMatrix[0].length - 1) { //右边界
             if (boardMatrix.length > 2) {
                 toReturn.add(new Letter(i - 1, j, boardMatrix[i - 1][j]));
                 toReturn.add(new Letter(i + 1, j, boardMatrix[i + 1][j]));
@@ -218,7 +223,7 @@ public class Boggle {
                 toReturn.add(new Letter(i + 1, j - 1, boardMatrix[i + 1][j - 1]));
                 return toReturn;
             }
-        } else {
+        } else { //一般情况
             toReturn.add(new Letter(i - 1, j, boardMatrix[i - 1][j]));
             toReturn.add(new Letter(i + 1, j, boardMatrix[i + 1][j]));
             toReturn.add(new Letter(i, j - 1, boardMatrix[i][j - 1]));
@@ -233,6 +238,7 @@ public class Boggle {
         return toReturn;
     }
 
+    //将Board转化为二维矩阵
     private static char[][] boardToCharArray(String boardFilePath) {
         In inBoard = new In(boardFilePath);
         char[][] boardMatrix = new char[rowNum(boardFilePath)][colNum(boardFilePath)];
@@ -245,12 +251,14 @@ public class Boggle {
         return boardMatrix;
     }
 
+    //Board的列数
     private static int colNum(String boardFilePath) {
         In in = new In(boardFilePath);
         String[] s = in.readAllLines();
         return s[0].length();
     }
 
+    //Board的行数
     private static int rowNum(String boardFilePath) {
         In in = new In(boardFilePath);
         String[] s = in.readAllLines();
@@ -266,6 +274,7 @@ public class Boggle {
             throw new IllegalArgumentException();
         }
         in.close();
+        //如果Board非矩形，则抛出异常
         if (!isRectangular(boardFilePath)) {
             throw new IllegalArgumentException();
         }
