@@ -70,6 +70,7 @@ public class Boggle {
     public static List<String> solve(int k, String boardFilePath) {
         // YOUR CODE HERE
         validate(k, boardFilePath);
+        //每次调用都要重新初始化，否则变量会被共享
         answers = new ArrayList<>();
         answerSet = new HashSet<>();
         In inDict = new In(dictPath);
