@@ -53,7 +53,7 @@ public class Boggle {
     }
 
     // File path of dictionary file
-    static String dictPath = "words.txt";
+    static String dictPath;
     static List<String> answers = new ArrayList<>();
     static Set<String> answerSet = new HashSet<>();
 
@@ -231,7 +231,7 @@ public class Boggle {
         return true;
     }
 
-    public static void main(String[] args) {
-        System.out.println(solve(7, "exampleBoard.txt"));
-    }
+//    public static void main(String[] args) {
+//        System.out.println(solve(7, "exampleBoard.txt"));
+//    }
 }
